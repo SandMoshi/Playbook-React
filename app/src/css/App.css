@@ -1,0 +1,74 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.pagetitle{
+  text-align: center;
+  flex: 1 0 100%;
+}
+
+.main{
+  /*  The main div inside of <App />        */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.play-container{
+  flex:  1 0 50%;
+}
+div.canvas{
+  /* This is essentially the <Board /> wrapper  */
+  flex: 1  0 50%;
+}
+
+.plays{
+  /* This is the list of plays   */
+  border: 1px solid black;
+  list-style: none;
+  min-height: 240px;
+  padding: 0;
+}
+
+.plays li{
+  min-width: 100px;
+  min-height: 24px;
+  background: rgba(205, 220, 57,0.8);
+  background-blend-mode: darken;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.plays li:nth-child(even){
+  background: rgba(205, 220, 57,0.4);
+}
+
+.plays li:hover{
+  background: #F8F8FF;
+}
+
+/*------    ------*/
+
+
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
