@@ -61,43 +61,21 @@ class Board extends React.Component{
     var y = e.clientY - rect.top -30;
     console.log("x: " + x + " y: " + y);
     ctx.drawImage(src,x,y,w,h);
-    this.save2canvas(tool,src,x,y,w,h);
+    this.props.save2canvas(tool,src,x,y,w,h);
   };
 
-  save2canvas(tool,src,x,y,w,h){
-    //This function will save what was drawn on the canvas to state
-    console.log("saved to console:");
+  redraw(src,x,y,w,h){
+    // alert("redraw works!");
     console.log(src);
-    //get state
-    const drawState = {...this.state.drawing};
-    console.log(drawState);
-    //change the state
-    const drawing = {
-      tool: tool,
-      src: src,
-      x: x,
-      y:x,
-      w:w,
-      h:h,
-    };
-    const timestamp = Date.now(); //get non duplicating number
-    drawState[`drawing-${timestamp}`] = drawing;
-    this.setState({drawing: drawState});
+    const canvas = document.querySelector("canvas#canvas");
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(src,x,y,w,h);
   }
 
-  save2list(event){
-    event.preventDefault(); //prevent browser refresh
-    const drawState = {...this.state.drawing};
-    const plays = {...this.state.plays};
-    var playName = this.inputplayname.value;
-    plays[playName] = {};
-
-    //This loops over all the items in the drawstate object
-    Object.keys(drawState).forEach( key => {
-      plays[playName][key]  = drawState[key];
-    });
-    console.log(plays);
-    this.setState({plays: plays});
+  eraseBoard(){
+    const canvas = document.querySelector("canvas#canvas");
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   render(){
@@ -109,10 +87,11 @@ class Board extends React.Component{
           <img className="jersey 11" src={shirtBlack11} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 12" src={shirtBlack12} onClick={(e) => this.changeTool("icon", e.target)}></img>
         </div>
-        <form className="save2list" onSubmit={ (event) => this.save2list(event)}>
+        <form className="save2list" onSubmit={ (event) => this.props.save2list(event, this.inputplayname.value)}>
           <input type="text" required placeholder="Play Name" ref={ (input) => {this.inputplayname = input}}/>
           <button className="save2list">Save Play</button>
         </form>
+        <button className="EraseCanvas" onClick={() => this.eraseBoard()}>Erase Play</button>
       </div>
     )
   }
