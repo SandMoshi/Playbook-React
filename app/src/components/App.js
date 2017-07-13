@@ -88,9 +88,11 @@ class App extends React.Component {
     return(
       <div className="main">
         <h1 className="pagetitle">Online Rubgy Playbook</h1>
-        <Board save2canvas={this.save2canvas} ref="board"/>
-        <SavePlay save2list={this.save2list} />
-        <div className="play-container">
+        <div className="left-side">
+          <Board save2canvas={this.save2canvas} ref="board"/>
+        </div>
+        <div className="right-side">
+          <SavePlay save2list={this.save2list} />
           <Plays loadPlays={this.loadPlays} plays={this.state.plays} drawPlay={this.drawPlay}/>
         </div>
       </div>
