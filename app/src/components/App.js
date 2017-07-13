@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../css/App.css';
 import Board from "./Board";
 import Plays from "./Plays";
+import SavePlay from "./SavePlay";
 import samplePlays from '../sample-plays';
 
 
@@ -37,7 +38,7 @@ class App extends React.Component {
       tool: tool,
       src: src,
       x: x,
-      y:x,
+      y:y,
       w:w,
       h:h,
     };
@@ -87,7 +88,8 @@ class App extends React.Component {
     return(
       <div className="main">
         <h1 className="pagetitle">Online Rubgy Playbook</h1>
-        <Board save2list={this.save2list} save2canvas={this.save2canvas} ref="board"/>
+        <Board save2canvas={this.save2canvas} ref="board"/>
+        <SavePlay save2list={this.save2list} />
         <div className="play-container">
           <Plays loadPlays={this.loadPlays} plays={this.state.plays} drawPlay={this.drawPlay}/>
         </div>

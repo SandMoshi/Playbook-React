@@ -87,10 +87,6 @@ class Board extends React.Component{
           <img className="jersey 11" src={shirtBlack11} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 12" src={shirtBlack12} onClick={(e) => this.changeTool("icon", e.target)}></img>
         </div>
-        <form className="save2list" onSubmit={ (event) => this.props.save2list(event, this.inputplayname.value)}>
-          <input type="text" required placeholder="Play Name" ref={ (input) => {this.inputplayname = input}}/>
-          <button className="save2list">Save Play</button>
-        </form>
         <button className="EraseCanvas" onClick={() => this.eraseBoard()}>Erase Play</button>
       </div>
     )
