@@ -5,6 +5,7 @@ import Plays from "./Plays";
 import SavePlay from "./SavePlay";
 import samplePlays from '../sample-plays';
 
+import base from '../base';
 
 class App extends React.Component {
   constructor() {
@@ -20,6 +21,19 @@ class App extends React.Component {
     };
   }
 
+  componentWillMount(){
+    this.ref = base.syncState(`${this.props.match.params.playbookName}`,
+      {
+        context: this,
+        state: 'plays',
+      }
+    )
+  }
+
+  componentWillUnmount(){
+    base.removeBinding(this.ref); //refers to the base.syncState above
+  }
+
   loadPlays(){
     this.setState({
       plays: samplePlays
@@ -29,6 +43,7 @@ class App extends React.Component {
   save2canvas(tool,src,x,y,w,h){
     //This function will save what was drawn on the canvas to state
     console.log("saved to console:");
+    src = src.classList.value; //Must convert src to just the classname string for firebase to accept it
     console.log(src);
     //get state
     const drawState = {...this.state.drawing};
@@ -63,10 +78,14 @@ class App extends React.Component {
       plays[playName].items[key]  = drawState[key];
     });
     console.log(plays);
+    //empty drawing state
+    this.setState({drawing: {}});
+    //save play to state
     this.setState({plays: plays});
   }
 
   drawPlay(key){
+    this.refs.board.eraseBoard(); //wipe old play
     console.log(key);
     const play = {...this.state.plays[key]};
     const items = play.items;

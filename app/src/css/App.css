@@ -94,10 +94,22 @@ div.tools{
 
 img.jersey{
   height: 60px;
+  transition: all 0.2s;
+}
+
+img.jersey:hover{
+  cursor: pointer;
+  height: 80px;
+  margin: -10px;
 }
 
 button.EraseCanvas{
   margin: 4px 10px 10px 0px;
+  background-color: #d32f2f;
+}
+
+button.EraseCanvas:hover{
+  color:darkred;
 }
 
 /*------  <SavePlay />  ------*/

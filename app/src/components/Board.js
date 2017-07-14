@@ -1,5 +1,14 @@
 import React from 'react';
 
+import shirtBlack1 from '../img/shirt-black-1.png';
+import shirtBlack2 from '../img/shirt-black-2.png';
+import shirtBlack3 from '../img/shirt-black-3.png';
+import shirtBlack4 from '../img/shirt-black-4.png';
+import shirtBlack5 from '../img/shirt-black-5.png';
+import shirtBlack6 from '../img/shirt-black-6.png';
+import shirtBlack7 from '../img/shirt-black-7.png';
+import shirtBlack8 from '../img/shirt-black-8.png';
+import shirtBlack9 from '../img/shirt-black-9.png';
 import shirtBlack10 from '../img/shirt-black-10.png';
 import shirtBlack11 from '../img/shirt-black-11.png';
 import shirtBlack12 from '../img/shirt-black-12.png';
@@ -27,7 +36,13 @@ class Board extends React.Component{
     };
   };
 
+  componentDidMount(){
+    initializeCanvas();
+  };
+
   changeTool(tool, src){
+    console.log(src);
+    src = src.classList.value;
     console.log(src);
     //duplicate our state
     const toolstate = {...this.state.tool};
@@ -37,10 +52,6 @@ class Board extends React.Component{
     this.setState({tool:newtoolstate});
   }
 
-  componentDidMount(){
-    initializeCanvas();
-  };
-
   draw(e,tool,src){
     if(!tool){
       return;
@@ -48,6 +59,7 @@ class Board extends React.Component{
     if(!src){
       return;
     }
+    src = document.getElementsByClassName(src)[0];
     console.log("tool = " + tool);
     console.log(src);
     console.log(e);
@@ -66,6 +78,7 @@ class Board extends React.Component{
 
   redraw(src,x,y,w,h){
     // alert("redraw works!");
+    src = document.getElementsByClassName(src)[0];
     console.log(src);
     const canvas = document.querySelector("canvas#canvas");
     const ctx = canvas.getContext('2d');
@@ -83,9 +96,22 @@ class Board extends React.Component{
       <div className="canvas">
         <canvas id="canvas" width="800" height="600" onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)}></canvas>
         <div className="tools">
+          <img className="jersey 1" src={shirtBlack1} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 2" src={shirtBlack2} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 3" src={shirtBlack3} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 4" src={shirtBlack4} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 5" src={shirtBlack5} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 6" src={shirtBlack6} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 7" src={shirtBlack7} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 8" src={shirtBlack8} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 9" src={shirtBlack9} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 10" src={shirtBlack10} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 11" src={shirtBlack11} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 12" src={shirtBlack12} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 13" src={shirtBlack13} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 14" src={shirtBlack14} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
+
         </div>
         <button className="EraseCanvas" onClick={() => this.eraseBoard()}>Erase Play</button>
       </div>
