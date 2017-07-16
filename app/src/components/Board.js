@@ -42,14 +42,30 @@ class Board extends React.Component{
 
   changeTool(tool, src){
     console.log(src);
-    src = src.classList.value;
-    console.log(src);
+    var srcStr = src.classList.value;
+    console.log(srcStr);
+    this.setActive(src);
     //duplicate our state
     const toolstate = {...this.state.tool};
     //change the tools
-    const newtoolstate = {name:tool, src: src};
+    const newtoolstate = {name:tool, src: srcStr};
     //update the state
     this.setState({tool:newtoolstate});
+  }
+
+  setActive(src){
+    const tools = document.querySelectorAll("div.tools *");
+    console.log(tools);
+    for (var element of tools){
+      // console.log(item);
+      if (element == src){
+        console.log('yes');
+        element.classList.add("active");
+      }
+      else{
+        element.classList.remove("active");
+      }
+    }
   }
 
   draw(e,tool,src){
@@ -73,6 +89,8 @@ class Board extends React.Component{
     var y = e.clientY - rect.top -30;
     console.log("x: " + x + " y: " + y);
     ctx.drawImage(src,x,y,w,h);
+    //remove the class active from src
+    src.classList.remove("active");
     this.props.save2canvas(tool,src,x,y,w,h);
   };
 
@@ -89,6 +107,7 @@ class Board extends React.Component{
     const canvas = document.querySelector("canvas#canvas");
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.props.emptyDrawingState();
   }
 
   render(){

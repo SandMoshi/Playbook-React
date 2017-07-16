@@ -70,10 +70,6 @@ div.canvas{
   /*display: block;*/
 }
 
-canvas{
-  flex: 2 1 50%;
-}
-
 div.canvas{
   position: relative;
 }
@@ -83,6 +79,11 @@ canvas {
   background: url("../img/rugby-field-bottom.png");
   background-size: 100% 100%;
   background-position-y: bottom;
+  flex: 2 1 50%;
+}
+
+canvas:hover{
+  cursor: cell;
 }
 
 div.tools{
@@ -90,6 +91,10 @@ div.tools{
   border-radius: 4px;
   background: #E9EFF2;
   width: 100%;
+}
+
+div.tools .active{
+  filter: drop-shadow(0px 0px 5px red);
 }
 
 img.jersey{
