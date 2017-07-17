@@ -103,13 +103,6 @@ class Board extends React.Component{
     ctx.drawImage(src,x,y,w,h);
   }
 
-  eraseBoard(){
-    const canvas = document.querySelector("canvas#canvas");
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.props.emptyDrawingState();
-  }
-
   render(){
     return(
       <div className="canvas">
@@ -132,7 +125,7 @@ class Board extends React.Component{
           <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
 
         </div>
-        <button className="EraseCanvas" onClick={() => this.eraseBoard()}>Erase Play</button>
+        <button className="EraseCanvas" onClick={() => this.props.eraseBoard()}>Erase Play</button>
       </div>
     )
   }

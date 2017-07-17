@@ -117,6 +117,64 @@ button.EraseCanvas:hover{
   color:darkred;
 }
 
+/*-----  <TeamPicker /> ------*/
+
+form.TeamPicker{
+  text-align: center;
+  max-width: 600px;
+  margin: auto;
+  border: 4px solid #CFD8DC;
+  padding-bottom: 40px;
+  padding-top: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+form.TeamPicker div.header{
+  /*box-shadow: 0 8px 16px -12px black;*/
+  margin: auto 0px 60px 0px;
+}
+
+form h1{
+    color: #52BE7F;
+}
+
+form h2{
+  text-transform: uppercase;
+  padding: 0px 30px;
+}
+
+form.TeamPicker button{
+  margin-top: 8px;
+}
+
+form.TeamPicker div.Choose{
+  max-width: 300px;
+  height: 100px;
+  max-height: 300px;
+  border: solid 1px #3D414A;
+  background: #E9EFF2;
+  border-radius: 4px;
+  text-align: right;
+  margin: auto;
+}
+
+input.playbookName{
+  border: none;
+  background: white;
+  margin-top: 0px;
+  height: 50%;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 4px 4px 0px 0px;
+  width: calc( 100% - 16px);
+  margin-left: -1px;
+  max-width: 600px;
+  padding: 0px 8px;
+  text-align: center;
+}
+
+
 /*------  <SavePlay />  ------*/
 form.save2list {
   max-width: 300px;
@@ -146,28 +204,6 @@ form.save2list div{
   align-items: center;
 }
 
-/*form.save2list div button {
-  cursor: pointer;
-  background: #52BE7F;
-  min-height: 22px;
-  min-width: 48px;
-  border: 0;
-  border-radius: 4px;
-  color: white;
-  padding: 8px 12px;
-  font-family: "Roboto";
-  font-weight: 400;
-  font-size: 16px;
-  margin-right: 4px;
-  box-shadow: #333333 0px 1px 2px;
-}*/
-
-/*form.save2list div button:hover{
-  cursor: pointer;
-  box-shadow:  #333333 0px 1px 3px;
-  color: green;
-}*/
-
 /* -----  <Plays /> -----  */
 
 .plays{
@@ -181,6 +217,7 @@ form.save2list div{
   padding: 0;
   max-width: 600px;
   border-radius: 4px;
+  overflow: hidden;
 }
 
 .plays li{
@@ -204,12 +241,59 @@ form.save2list div{
   background: rgba(205, 220, 57,0.4);
 }
 
-.plays li:hover{
+.plays li:not(:first-child):hover{
   background: #607D8B;
   cursor: pointer;
   color: white;
 }
 
+ul.plays li.subtitle{
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-transform:uppercase;
+  font-family: Roboto, sans-serif;
+  background-color: #D7E361;
+  display: flex;
+  justify-content: center;
+  /*border-bottom: 2px solid black;*/
+  box-shadow: 0px 1px 4px black;
+}
+
+
+
+ul.CurrentPlay{
+  list-style: none;
+  max-width: 584px;
+  border: 1px solid black;
+  min-height: 120px;
+  padding: 8px;
+  border-radius: 4px;
+  font-family: Roboto;
+  overflow: hidden;
+}
+
+ul.CurrentPlay .subtitle{
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-transform:uppercase;
+  font-family: Roboto, sans-serif;
+  background-color: #D7E361;
+  margin: -8px -8px 4px -8px;
+  padding: 6px 8px 4px 8px;
+  box-shadow: 0px 1px 4px black;
+}
+
+ul.CurrentPlay span{
+  font-weight: bold;
+  width: 80px;
+}
+
+ul.CurrentPlay li {
+  margin-bottom: 6px;
+  margin-top: 8px;
+}
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

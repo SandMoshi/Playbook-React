@@ -15,6 +15,7 @@ class App extends React.Component {
     this.save2canvas = this.save2canvas.bind(this);
     this.drawPlay = this.drawPlay.bind(this);
     this.emptyDrawingState = this.emptyDrawingState.bind(this);
+    this.eraseBoard = this.eraseBoard.bind(this);
 
     this.state = {
       plays: {},
@@ -88,7 +89,7 @@ class App extends React.Component {
   }
 
   drawPlay(key){
-    this.refs.board.eraseBoard(); //wipe old play
+    this.eraseBoard(); //wipe old play
     console.log(key);
     const play = {...this.state.plays[key]};
     const items = play.items;
@@ -118,12 +119,22 @@ class App extends React.Component {
     });
   }
 
+  eraseBoard(){
+    const canvas = document.querySelector("canvas#canvas");
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.emptyDrawingState();
+    this.setState({
+      currentPlay: {},
+    })
+  }
+
   render(){
     return(
       <div className="main">
         <h1 className="pagetitle">Online Rubgy Playbook</h1>
         <div className="left-side">
-          <Board save2canvas={this.save2canvas} ref="board" emptyDrawingState={this.emptyDrawingState}/>
+          <Board save2canvas={this.save2canvas} ref="board" emptyDrawingState={this.emptyDrawingState} eraseBoard={this.eraseBoard}/>
         </div>
         <div className="right-side">
           <SavePlay save2list={this.save2list} />
