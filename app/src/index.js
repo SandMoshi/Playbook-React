@@ -10,8 +10,10 @@ import TeamPicker from './components/TeamPicker';
 import NotFound from './components/NotFound';
 
 const Root = () => {
+  // const repo = `/${window.location.pathname.split('/')[1]}`;
+
   return(
-    <BrowserRouter>
+    <BrowserRouter basename="/RugbyPlaybook">
       <Switch>
         <Route exact path="/" component={TeamPicker} />
         <Route exact path="/team/:playbookName" component={App} />
