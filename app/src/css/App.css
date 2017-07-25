@@ -66,6 +66,8 @@ button:hover{
 div.canvas{
   /* This is essentially the <Board /> wrapper  */
   max-width: 802px;
+  width: calc(100vw - 40px);
+  max-height: 602px;
   margin: 0px 20px 20px 20px;
   /*display: block;*/
 }
@@ -80,6 +82,9 @@ canvas {
   background-size: 100% 100%;
   background-position-y: bottom;
   flex: 2 1 50%;
+  width: 100%;
+  height: calc((100vw - 40px) * (600/800));
+  max-height: 602px;
 }
 
 canvas:hover{
@@ -102,10 +107,15 @@ img.jersey{
   transition: all 0.2s;
 }
 
-img.jersey:hover{
+img.jersey:hover, img.line:hover{
   cursor: pointer;
   height: 80px;
   margin: -10px;
+}
+
+img.line{
+  height: 60px;
+  transition: all 0.2s;
 }
 
 button.EraseCanvas{
