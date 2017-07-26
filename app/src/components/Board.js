@@ -36,6 +36,7 @@ class Board extends React.Component{
         // playname:{},
       },
       "isDrawing": false,
+      tempxy:{},
     };
   };
 
@@ -45,6 +46,8 @@ class Board extends React.Component{
 
   changeTool(tool, src){
     console.log(src);
+    //always remove active
+    src.classList.remove("active");
     var srcStr = src.classList.value;
     console.log(srcStr);
     this.setActive(src);
@@ -104,7 +107,8 @@ class Board extends React.Component{
     const cHeight = canvas.height;
     console.log("Canvas Dimensions: " + cWidth + "  " + cHeight );
 
-    if(tool === "icon"){
+    if( tool === "icon" ){
+      //This is for drawing jerseys and images
       src = document.getElementsByClassName(src)[0];
       console.log("tool = " + tool);
       console.log(src);
@@ -118,12 +122,12 @@ class Board extends React.Component{
       ctx.drawImage(src,x,y,w,h);
       //remove the class active from src
       src.classList.remove("active");
-      x100 = x/cWidth;
-      y100 = y/cHeight;
-      this.props.save2canvas(tool,src,x100,y100,w,h);
+      var x100 = x/cWidth;
+      var y100 = y/cHeight;
+      this.props.save2canvas(tool,src,x100,y100,w,h,null,null);
     }
     else if ( tool === "line"){
-      //var isDrawing = this.state.isDrawing;
+      //This is for drawing lines
 
       //Get isDrawing
       var isDrawing = this.toggleDrawing();
@@ -143,36 +147,68 @@ class Board extends React.Component{
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
         ctx.moveTo(x,y);
+        var x100 = x/cWidth;
+        var y100 = y/cHeight;
+        this.setState({tempxy:{x:x,y:y,x100:x100,y100:y100}});
       }
       else if (isDrawing === true){
         //this is the end point
         console.log("Drawing is on. Maybe ending a line.");
         var rect = canvas.getBoundingClientRect();
-        var x = e.clientX - rect.left;
-        var y = e.clientY - rect.top;
-        ctx.lineTo(x,y);
+        var x2 = e.clientX - rect.left;
+        var y2 = e.clientY - rect.top;
+        ctx.lineTo(x2,y2);
         ctx.strokeStyle = color;
         ctx.lineCap = endStyle;
         console.log(color);
         ctx.closePath();
         ctx.stroke();
         this.toggleDrawing(false);
+
+        var x200 = x2/cWidth;
+        var y200 = y2/cWidth;
+        //grab x100 and y100 from state
+        const x100 = this.state.tempxy.x100;
+        const y100 = this.state.tempxy.y100;
+        // console.log("x100/y100:" + x100 + " / " +y100);
+        this.props.save2canvas(tool,src,x100,y100,null,null,x200,y200);
       }
     }
 
   };
 
-  redraw(src,x100,y100,w,h){
+  redraw(tool,src,x100,y100,w,h,x200,y200){
     // alert("redraw works!");
+    src = document.getElementsByClassName(src)[0];
     const canvas = document.querySelector("canvas#canvas");
     const ctx = canvas.getContext('2d');
     const cWidth = canvas.width;
     const cHeight = canvas.height;
-    x = x100*cWidth;
-    y = y100*cHeight;
-    src = document.getElementsByClassName(src)[0];
-    console.log(src);
-    ctx.drawImage(src,x,y,w,h);
+    var x = x100*cWidth;
+    var y = y100*cHeight;
+    var x2 = x200*cWidth;
+    var y2 = y200*cHeight;
+
+    console.log("Now choosing what to redraw");
+    if (tool === "icon"){
+      console.log(src);
+      ctx.drawImage(src,x,y,w,h);
+    }
+    else if (tool === "line"){
+      console.log("Chose to redraw a line;" + src);
+      var color = src.getAttribute("color");
+      var endStyle = src.getAttribute("cap");
+      ctx.beginPath();
+      ctx.moveTo(x,y)
+      ctx.lineTo(x2,y2);
+      ctx.strokeStyle = color;
+      ctx.lineCap = endStyle;
+      console.log(color);
+      ctx.closePath();
+      ctx.stroke();
+      this.toggleDrawing(false);
+    }
+
   }
 
   render(){

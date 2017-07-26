@@ -46,8 +46,8 @@ class App extends React.Component {
   save2canvas(tool,src,x,y,w,h,x2,y2){
     //This function will save what was drawn on the canvas to state
     console.log("saved to console:");
+    src.classList.remove("active"); //make sure the source doesn't contain active
     var tempsrc = src.classList.value; //Must convert src to just the classname string for firebase to accept it
-    tempsrc.replace(" active", ""); //remove the active class if it exists
     console.log(src);
     //get state
     const drawState = {...this.state.drawing};
@@ -99,15 +99,16 @@ class App extends React.Component {
     //console.log(items);
     Object.keys(items).forEach( item => {
       // console.log(item);
-      var src = items[item].src;
+      var tool = items[item].tool;
+      const src = items[item].src;
       var x = items[item].x;
       var y = items[item].y;
-      var w = items[item].w;
-      var h = items[item].h;
-      var x2 = items[item].x2;
-      var y2 = items[item].y2;
-      // console.log(src);
-      this.refs.board.redraw(src,x,y,w,h,x2,y2);
+      var w = items[item].w || null;
+      var h = items[item].h || null;
+      var x2 = items[item].x2 || null;
+      var y2 = items[item].y2 || null;
+      console.log(src);
+      this.refs.board.redraw(tool,src,x,y,w,h,x2,y2);
     })
     this.setState({
       currentPlay: {
