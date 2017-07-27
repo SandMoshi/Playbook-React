@@ -31,12 +31,22 @@
 }
 
 div.left-side{
-  flex: 1 0 49%;
+  /*flex: 1 0 49%;*/
   /*min-width: 50%;*/
 }
 div.right-side{
-  flex: 1 0 49%;
+  flex: 1 0 26%;
+  margin-right: 20px;
   /*min-width: 50%;*/
+}
+
+@media (max-width: 1181px){
+  div.left-side{
+    order:2;
+  }
+  div.right-side{
+    margin-left: 20px;
+  }
 }
 
 /* --- Site Wide --- */
@@ -67,9 +77,8 @@ div.canvas{
   /* This is essentially the <Board /> wrapper  */
   max-width: 802px;
   width: calc(100vw - 40px);
-  max-height: 602px;
+  /*max-height: 602px;*/
   margin: 0px 20px 20px 20px;
-  /*display: block;*/
 }
 
 div.canvas{
@@ -187,7 +196,7 @@ input.playbookName{
 
 /*------  <SavePlay />  ------*/
 form.save2list {
-  max-width: 300px;
+  max-width: 400px;
   height: 100px;
   max-height: 100px;
   border: solid 1px #3D414A;
@@ -218,14 +227,14 @@ form.save2list div{
 
 .plays{
   /* This is the list of plays   */
-  min-width: 400px;
-  max-width: 600px;
+  width: 100%;
+  min-width: 230px;
+  max-width: 400px;
   max-height: 600px;
   border: 1px solid black;
   list-style: none;
   min-height: 240px;
   padding: 0;
-  max-width: 600px;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -270,14 +279,12 @@ ul.plays li.subtitle{
   box-shadow: 0px 1px 4px black;
 }
 
-
-
 ul.CurrentPlay{
   list-style: none;
-  max-width: 584px;
+  max-width: 400px;
   border: 1px solid black;
   min-height: 120px;
-  padding: 8px;
+  padding: 8px 0px;
   border-radius: 4px;
   font-family: Roboto;
   overflow: hidden;
@@ -303,9 +310,43 @@ ul.CurrentPlay span{
 ul.CurrentPlay li {
   margin-bottom: 6px;
   margin-top: 8px;
+  padding-right: 8px;
+  padding-left: 8px;
 }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+
+/* RESPONSIVE STYLING -- TABLETS */
+@media (max-width: 1181px){
+  div.right-side{
+    display: flex;
+    flex-direction: column;
+  }
+  div.right-side div{
+    display: flex;
+    flex-direction: column;
+  }
+  button.loadPlays{
+    order:2;
+    max-width: 400px;
+  }
+  ul.plays{
+    order:3;
+  }
+  ul.CurrentPlay{
+    order:1;
+  }
+  form.save2list{
+    order: 2; /* really means fourth */
+    margin-bottom: 20px;
+  }
+  button.save2list{
+    align-self: flex-end;
+    margin-bottom: 8px;
+  }
+
 }

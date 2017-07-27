@@ -16,6 +16,7 @@ import shirtBlack13 from '../img/shirt-black-13.png';
 import shirtBlack14 from '../img/shirt-black-14.png';
 import shirtBlack15 from '../img/shirt-black-15.png';
 import arrowRed from '../img/arrow1.png';
+import lineRed from '../img/line1.png';
 
 import '../css/board.css';
 import { initializeCanvas } from '../js/canvas.js';
@@ -160,6 +161,7 @@ class Board extends React.Component{
         ctx.lineTo(x2,y2);
         ctx.strokeStyle = color;
         ctx.lineCap = endStyle;
+        ctx.lineWidth = 7;
         console.log(color);
         ctx.closePath();
         ctx.stroke();
@@ -203,6 +205,7 @@ class Board extends React.Component{
       ctx.lineTo(x2,y2);
       ctx.strokeStyle = color;
       ctx.lineCap = endStyle;
+      ctx.lineWidth = 7;
       console.log(color);
       ctx.closePath();
       ctx.stroke();
@@ -231,6 +234,7 @@ class Board extends React.Component{
           <img className="jersey 13" src={shirtBlack13} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 14" src={shirtBlack14} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="line 1" src={lineRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
           <img className="line arrow 1" src={arrowRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
         </div>
         <button className="EraseCanvas" onClick={() => this.props.eraseBoard()}>Erase Play</button>
