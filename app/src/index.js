@@ -13,7 +13,7 @@ const Root = () => {
   // const repo = `/${window.location.pathname.split('/')[1]}`;
 
   return(
-    <BrowserRouter basename="/RugbyPlaybook">
+    <BrowserRouter basename="/ReactRugbyPlaybook">
       <Switch>
         <Route exact path="/" component={TeamPicker} />
         <Route exact path="/team/:playbookName" component={App} />

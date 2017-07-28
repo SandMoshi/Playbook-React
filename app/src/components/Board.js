@@ -17,6 +17,7 @@ import shirtBlack14 from '../img/shirt-black-14.png';
 import shirtBlack15 from '../img/shirt-black-15.png';
 import arrowRed from '../img/arrow1.png';
 import lineRed from '../img/line1.png';
+import lineSegRed from '../img/line-seg2.png';
 
 import '../css/board.css';
 import { initializeCanvas } from '../js/canvas.js';
@@ -94,6 +95,29 @@ class Board extends React.Component{
     }
   }
 
+  handleKeyDown(e){
+    //listen for escape
+    console.log("key pressed!");
+    if(e.keydown === 27){
+      console.alert("Esc keypress detected!");
+    }
+  }
+
+  handleRightClick(e,tool,src){
+    console.log(src);
+    e.preventDefault();
+    // alert("Right Click detected");
+    if(src.indexOf(' seg') != -1){
+        //end the drawing
+        const canvas = document.querySelector("canvas#canvas");
+        const ctx = canvas.getContext('2d');
+        ctx.closePath();
+        this.toggleDrawing(false);
+        const rightClickmsg = document.getElementById("rightClickmsg");
+        rightClickmsg.classList.add("hidden");
+    }
+  }
+
   draw(e,tool,src){
     if(!tool){
       return;
@@ -163,9 +187,17 @@ class Board extends React.Component{
         ctx.lineCap = endStyle;
         ctx.lineWidth = 7;
         console.log(color);
-        ctx.closePath();
-        ctx.stroke();
-        this.toggleDrawing(false);
+        if(src.classList.contains('seg')){
+            //do nothing
+            ctx.stroke();
+            const rightClickmsg = document.getElementById("rightClickmsg");
+            rightClickmsg.classList.remove("hidden");
+        }
+        else{
+          ctx.closePath();
+          ctx.stroke();
+          this.toggleDrawing(false);
+        }
 
         var x200 = x2/cWidth;
         var y200 = y2/cWidth;
@@ -217,7 +249,7 @@ class Board extends React.Component{
   render(){
     return(
       <div className="canvas">
-        <canvas id="canvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)}></canvas>
+        <canvas id="canvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)} onContextMenu={(e) => this.handleRightClick(e,this.state.tool.name, this.state.tool.src)} ></canvas>
         <div className="tools">
           <img className="jersey 1" src={shirtBlack1} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 2" src={shirtBlack2} onClick={(e) => this.changeTool("icon", e.target)}></img>
@@ -236,8 +268,10 @@ class Board extends React.Component{
           <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="line 1" src={lineRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
           <img className="line arrow 1" src={arrowRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
+          <img className="line seg 1" src={lineSegRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
         </div>
         <button className="EraseCanvas" onClick={() => this.props.eraseBoard()}>Erase Play</button>
+        <p className="helper hidden" id="rightClickmsg">Right Click to Stop</p>
       </div>
     )
   }
