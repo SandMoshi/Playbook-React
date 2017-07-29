@@ -43,7 +43,7 @@ class App extends React.Component {
     });
   }
 
-  save2canvas(tool,src,x,y,w,h,x2,y2){
+  save2canvas(tool,src,x,y,w,h,x2,y2,xArr,yArr){
     //This function will save what was drawn on the canvas to state
     console.log("saved to console:");
     src.classList.remove("active"); //make sure the source doesn't contain active
@@ -62,6 +62,8 @@ class App extends React.Component {
       h:h,
       x2:x2,
       y2:y2,
+      xArr:xArr,
+      yArr:yArr,
     };
     const timestamp = Date.now(); //get non duplicating number
     drawState[`drawing-${timestamp}`] = drawing;
@@ -107,8 +109,11 @@ class App extends React.Component {
       var h = items[item].h || null;
       var x2 = items[item].x2 || null;
       var y2 = items[item].y2 || null;
+      var xArr = items[item].xArr || null;
+      var yArr = items[item].yArr || null;
+
       console.log(src);
-      this.refs.board.redraw(tool,src,x,y,w,h,x2,y2);
+      this.refs.board.redraw(tool,src,x,y,w,h,x2,y2,xArr,yArr);
     })
     this.setState({
       currentPlay: {

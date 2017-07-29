@@ -107,6 +107,10 @@ class Board extends React.Component{
     console.log(src);
     e.preventDefault();
     // alert("Right Click detected");
+    //If no src then do nothing
+    if(!src){
+      return;
+    }
     if(src.indexOf(' seg') != -1){
         //end the drawing
         const canvas = document.querySelector("canvas#canvas");
@@ -115,6 +119,14 @@ class Board extends React.Component{
         this.toggleDrawing(false);
         const rightClickmsg = document.getElementById("rightClickmsg");
         rightClickmsg.classList.add("hidden");
+        //grab drawing temp data from state
+        const x100 = this.state.tempxy.x100;
+        const y100 = this.state.tempxy.y100;
+        const xArr = this.state.tempxy.xArr;
+        const yArr = this.state.tempxy.yArr;
+        src = document.getElementsByClassName(src)[0];
+        //now save the drawing data to state waiting to be turned into a play
+        this.props.save2canvas("line",src,x100,y100,null,null,null,null,xArr,yArr);
     }
   }
 
@@ -149,7 +161,7 @@ class Board extends React.Component{
       src.classList.remove("active");
       var x100 = x/cWidth;
       var y100 = y/cHeight;
-      this.props.save2canvas(tool,src,x100,y100,w,h,null,null);
+      this.props.save2canvas(tool,src,x100,y100,w,h,null,null,null,null);
     }
     else if ( tool === "line"){
       //This is for drawing lines
@@ -174,15 +186,19 @@ class Board extends React.Component{
         ctx.moveTo(x,y);
         var x100 = x/cWidth;
         var y100 = y/cHeight;
-        this.setState({tempxy:{x:x,y:y,x100:x100,y100:y100}});
+        var xArr = []; //array that will hold x100 values
+        var yArr = [];
+        xArr[0] = x100;
+        yArr[0] = y100;
+        this.setState({tempxy:{x:x,y:y,x100:x100,y100:y100,xArr:xArr,yArr:yArr}});
       }
       else if (isDrawing === true){
         //this is the end point
-        console.log("Drawing is on. Maybe ending a line.");
+        console.log("Drawing is on. Maybe ending a line or segmented line.");
         var rect = canvas.getBoundingClientRect();
-        var x2 = e.clientX - rect.left;
-        var y2 = e.clientY - rect.top;
-        ctx.lineTo(x2,y2);
+        var xnew = e.clientX - rect.left;
+        var ynew = e.clientY - rect.top;
+        ctx.lineTo(xnew,ynew);
         ctx.strokeStyle = color;
         ctx.lineCap = endStyle;
         ctx.lineWidth = 7;
@@ -192,26 +208,43 @@ class Board extends React.Component{
             ctx.stroke();
             const rightClickmsg = document.getElementById("rightClickmsg");
             rightClickmsg.classList.remove("hidden");
+            //grab the latest xArr and yArr
+            var xArr = this.state.tempxy.xArr;
+            var yArr = this.state.tempxy.yArr;
+
+            var xnew200 = xnew/cWidth;
+            var ynew200 = ynew/cHeight;
+            //push new values to array
+            xArr.push(xnew200);
+            yArr.push(ynew200);
+            //save the new x and y arrays to state
+            const tempxy = {...this.state.tempxy};
+            tempxy[xArr] = xArr;
+            tempxy[yArr] = yArr;
+            this.setState({tempxy:tempxy});
         }
         else{
           ctx.closePath();
           ctx.stroke();
           this.toggleDrawing(false);
+          var x2 = xnew;
+          var y2 = ynew;
+          var x200 = x2/cWidth;
+          var y200 = y2/cHeight;
+          //grab starting point data from state
+          const x100 = this.state.tempxy.x100;
+          const y100 = this.state.tempxy.y100;
+          //save drawing data to state
+          this.props.save2canvas(tool,src,x100,y100,null,null,x200,y200,null,null);
         }
-
-        var x200 = x2/cWidth;
-        var y200 = y2/cWidth;
-        //grab x100 and y100 from state
-        const x100 = this.state.tempxy.x100;
-        const y100 = this.state.tempxy.y100;
         // console.log("x100/y100:" + x100 + " / " +y100);
-        this.props.save2canvas(tool,src,x100,y100,null,null,x200,y200);
+        // this.props.save2canvas(tool,src,x100,y100,null,null,x200,y200);
       }
     }
 
   };
 
-  redraw(tool,src,x100,y100,w,h,x200,y200){
+  redraw(tool,src,x100,y100,w,h,x200,y200,xArr,yArr){
     // alert("redraw works!");
     src = document.getElementsByClassName(src)[0];
     const canvas = document.querySelector("canvas#canvas");
@@ -233,13 +266,27 @@ class Board extends React.Component{
       var color = src.getAttribute("color");
       var endStyle = src.getAttribute("cap");
       ctx.beginPath();
-      ctx.moveTo(x,y)
-      ctx.lineTo(x2,y2);
+      //check if line is segmented
+      if(src.classList.contains('seg')){
+        var x0 = xArr[0]*cWidth;
+        var y0 = yArr[0]*cHeight;
+        ctx.moveTo(x0,y0);
+        //loop over all x and y and draw each
+        for(var i = 1; i < xArr.length;i++){
+          var x = xArr[i]*cWidth;
+          var y = yArr[i]*cHeight;
+          ctx.lineTo(x,y);
+        }
+      }
+      else{
+        ctx.moveTo(x,y)
+        ctx.lineTo(x2,y2);
+      }
       ctx.strokeStyle = color;
       ctx.lineCap = endStyle;
       ctx.lineWidth = 7;
       console.log(color);
-      ctx.closePath();
+      // ctx.closePath();
       ctx.stroke();
       this.toggleDrawing(false);
     }
@@ -267,7 +314,7 @@ class Board extends React.Component{
           <img className="jersey 14" src={shirtBlack14} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="line 1" src={lineRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
-          <img className="line arrow 1" src={arrowRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
+          {/* <img className="line arrow 1" src={arrowRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img> */}
           <img className="line seg 1" src={lineSegRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
         </div>
         <button className="EraseCanvas" onClick={() => this.props.eraseBoard()}>Erase Play</button>
