@@ -150,11 +150,12 @@ class Board extends React.Component{
       console.log("tool = " + tool);
       console.log(src);
       console.log(e);
-      const w = (64/802*cWidth); //width of image
-      const h = (64/602*cHeight); //height of image
+      const w = (64/802*cWidth*1.3); //width of image
+      const h = (64/602*cHeight*1.3); //height of image
       var rect = canvas.getBoundingClientRect();
-      var x = (e.clientX - rect.left - 30);
-      var y = (e.clientY - rect.top -30);
+      var manualOffset = 40/800 * cWidth;
+      var x = (e.clientX - rect.left - manualOffset);
+      var y = (e.clientY - rect.top - manualOffset);
       console.log("x: " + x + " y: " + y);
       ctx.drawImage(src,x,y,w,h);
       //remove the class active from src
@@ -255,6 +256,8 @@ class Board extends React.Component{
     var y = y100*cHeight;
     var x2 = x200*cWidth;
     var y2 = y200*cHeight;
+    w = (64/800*cWidth*1.3); //width of image
+    h = (64/600*cHeight*1.3); //height of image
 
     console.log("Now choosing what to redraw");
     if (tool === "icon"){
