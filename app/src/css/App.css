@@ -66,6 +66,14 @@ button {
   box-shadow: #333333 0px 1px 2px;
 }
 
+button.erase{
+    background-color: #d32f2f;
+}
+
+button.erase:hover{
+    color: darkred;
+}
+
 button:hover{
   cursor: pointer;
   box-shadow:  #333333 0px 1px 3px;

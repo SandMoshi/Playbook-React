@@ -16,6 +16,7 @@ class App extends React.Component {
     this.drawPlay = this.drawPlay.bind(this);
     this.emptyDrawingState = this.emptyDrawingState.bind(this);
     this.eraseBoard = this.eraseBoard.bind(this);
+    this.deleteAllPlays = this.deleteAllPlays.bind(this);
 
     this.state = {
       plays: {},
@@ -139,6 +140,12 @@ class App extends React.Component {
     })
   }
 
+  deleteAllPlays(){
+    //remove all plays from state
+    window.confirm("Are you sure you want to delete all the saved plays? They will be lost forever");
+    this.setState({ plays:null });
+  }
+
   render(){
     return(
       <div className="main">
@@ -148,7 +155,7 @@ class App extends React.Component {
         </div>
         <div className="right-side">
           <SavePlay save2list={this.save2list} />
-          <Plays loadPlays={this.loadPlays} plays={this.state.plays} currentPlay={this.state.currentPlay} drawPlay={this.drawPlay} />
+          <Plays loadPlays={this.loadPlays} plays={this.state.plays} currentPlay={this.state.currentPlay} drawPlay={this.drawPlay} deleteAllPlays={this.deleteAllPlays} />
         </div>
       </div>
     )

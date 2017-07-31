@@ -24,7 +24,7 @@ class Plays extends React.Component{
 
         </ul>
         <button onClick={this.props.loadPlays} className="loadPlays">Load Sample Plays</button>
-
+        <button onClick={this.props.deleteAllPlays} className="deleteAllPlays erase">Delete Plays</button>
       </div>
     )
 }
