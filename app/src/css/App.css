@@ -211,8 +211,8 @@ input.playbookName{
 /*------  <SavePlay />  ------*/
 form.save2list {
   max-width: 400px;
-  height: 100px;
-  max-height: 100px;
+  height: 150px;
+  /*max-height: 150px;*/
   border: solid 1px #3D414A;
   background: #E9EFF2;
   border-radius: 4px;
@@ -223,7 +223,7 @@ form.save2list input{
   background: white;
   margin-top: 0px;
   padding: 0px 12px;
-  height: 50%;
+  height: 33.3%;
   font-weight: 500;
   font-size: 16px;
   border-radius: 4px 4px 0px 0px;
@@ -231,10 +231,15 @@ form.save2list input{
 }
 
 form.save2list div{
-  height: 50%;
+  height: 33.3%;
   display: flex;
   justify-content:flex-end;
   align-items: center;
+}
+
+form.save2list input.desc{
+  border-top: 1px solid #E9EFF2;
+  border-radius: 0px;
 }
 
 /* -----  <Plays /> -----  */

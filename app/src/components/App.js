@@ -70,14 +70,14 @@ class App extends React.Component {
     this.setState({drawing: drawState});
   }
 
-  save2list(event, playName){
+  save2list(event, playName, desc){
     console.log(playName);
     event.preventDefault(); //prevent browser refresh
     const drawState = {...this.state.drawing};
     const plays = {...this.state.plays};
     plays[playName] = {};
     plays[playName].name = playName;
-    plays[playName].desc = "None yet";
+    plays[playName].desc = desc;
     plays[playName].items = {};
 
 
