@@ -80,6 +80,11 @@ button:hover{
   color: green;
 }
 
+.slideDown{
+  transition: transform 1s;
+  transform: translateY(120%);
+}
+
 /* ----- <Board />  -----*/
 div.canvas{
   /* This is essentially the <Board /> wrapper  */
@@ -315,6 +320,7 @@ ul.CurrentPlay{
   border-radius: 4px;
   font-family: Roboto;
   overflow: hidden;
+  position: relative;
 }
 
 ul.CurrentPlay .subtitle{
@@ -341,6 +347,18 @@ ul.CurrentPlay li {
   padding-left: 8px;
 }
 
+ul div.noCurrentPlay{
+  background-color: #d32f2f;
+  color:white;
+  padding: 12px 12px;
+  text-align: center;
+  line-height: 1.5em;
+  position: absolute;
+  top:0;
+  height: 100%;
+  transition: transform 1s;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -362,7 +380,7 @@ ul.CurrentPlay li {
     max-width: 400px;
   }
   ul.plays{
-    order:3;
+    order:4;
   }
   ul.CurrentPlay{
     order:1;
@@ -375,5 +393,8 @@ ul.CurrentPlay li {
     align-self: flex-end;
     margin-bottom: 8px;
   }
-
+  button.deleteAllPlays{
+    order: 3;
+    margin-top: 8px;
+  }
 }

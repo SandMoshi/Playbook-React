@@ -11,6 +11,9 @@ class Plays extends React.Component{
       <div>
         <ul className="CurrentPlay">
           <li className="subtitle">Current Play</li>
+          <div className="noCurrentPlay">
+            <p>No play has been selected.<br/>Choose a play from the list below to display it on the board.</p>
+          </div>
           <li className="currentPlay name"><span>Name:  </span>{this.props.currentPlay.name}</li>
           <li className="currentPlay desc"><span>Description:  </span>{this.props.currentPlay.desc}</li>
         </ul>

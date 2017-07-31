@@ -95,6 +95,9 @@ class App extends React.Component {
 
   drawPlay(key){
     this.eraseBoard(); //wipe old play
+    //hide noCurrentPlay box
+    const noCurrentPlay = document.getElementsByClassName("noCurrentPlay")[0];
+    noCurrentPlay.classList.add("slideDown");
     console.log(key);
     const play = {...this.state.plays[key]};
     const items = play.items;
@@ -144,6 +147,11 @@ class App extends React.Component {
     //remove all plays from state
     window.confirm("Are you sure you want to delete all the saved plays? They will be lost forever");
     this.setState({ plays:null });
+    //unhide noCurrentPlay red box if there is no currentPlay
+    if(Object.keys(this.state.currentPlay).length === 0){
+      const noCurrentPlay = document.getElementsByClassName("noCurrentPlay")[0];
+      noCurrentPlay.classList.remove("slideDown");
+    }
   }
 
   render(){
