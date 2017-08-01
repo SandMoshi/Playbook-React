@@ -30,6 +30,7 @@ class Board extends React.Component{
     super();
     this.changeTool = this.changeTool.bind(this);
     this.toggleDrawing = this.toggleDrawing.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     //create empty objects in the state
     this.state = {
       tool:{},
@@ -95,6 +96,23 @@ class Board extends React.Component{
     }
   }
 
+  handleMouseMove(e) {
+    // console.log(e);
+    var isDrawing = this.toggleDrawing();
+    if(isDrawing){
+      //move (2) to wherever mouse is
+      const pTwo = document.querySelector("p.two");
+      const canvas = document.querySelector("canvas#canvas");
+      var rect = canvas.getBoundingClientRect();
+      var x = (e.clientX - rect.left);
+      var y = (e.clientY - rect.top);
+      pTwo.style.display= "block";
+      pTwo.style.left = x + 15 +  "px";
+      pTwo.style.top = y - 45 + "px";
+    }
+  }
+
+
   handleKeyDown(e){
     //listen for escape
     console.log("key pressed!");
@@ -127,6 +145,12 @@ class Board extends React.Component{
         src = document.getElementsByClassName(src)[0];
         //now save the drawing data to state waiting to be turned into a play
         this.props.save2canvas("line",src,x100,y100,null,null,null,null,xArr,yArr);
+
+        //hide (1) and (2)
+        const pOne = document.querySelector("p.one");
+        const pTwo = document.querySelector("p.two");
+        pOne.style.display = "none";
+        pTwo.style.display = "none";
     }
   }
 
@@ -192,6 +216,12 @@ class Board extends React.Component{
         xArr[0] = x100;
         yArr[0] = y100;
         this.setState({tempxy:{x:x,y:y,x100:x100,y100:y100,xArr:xArr,yArr:yArr}});
+        //Display (1) above canvas
+        const pOne = document.querySelector("p.one");
+        const pTwo = document.querySelector("p.two");
+        pOne.style.top = y - 5 + "px";
+        pOne.style.left = x - 30 + "px";
+        pOne.style.display = "block";
       }
       else if (isDrawing === true){
         //this is the end point
@@ -202,7 +232,7 @@ class Board extends React.Component{
         ctx.lineTo(xnew,ynew);
         ctx.strokeStyle = color;
         ctx.lineCap = endStyle;
-        ctx.lineWidth = 7;
+        ctx.lineWidth = 6;
         console.log(color);
         if(src.classList.contains('seg')){
             //do nothing
@@ -237,9 +267,14 @@ class Board extends React.Component{
           const y100 = this.state.tempxy.y100;
           //save drawing data to state
           this.props.save2canvas(tool,src,x100,y100,null,null,x200,y200,null,null);
+          //hide (1) and (2)
+          const pOne = document.querySelector("p.one");
+          const pTwo = document.querySelector("p.two");
+          pOne.style.display = "none";
+          pTwo.style.display = "none";
+
         }
         // console.log("x100/y100:" + x100 + " / " +y100);
-        // this.props.save2canvas(tool,src,x100,y100,null,null,x200,y200);
       }
     }
 
@@ -287,7 +322,7 @@ class Board extends React.Component{
       }
       ctx.strokeStyle = color;
       ctx.lineCap = endStyle;
-      ctx.lineWidth = 7;
+      ctx.lineWidth = 6;
       console.log(color);
       // ctx.closePath();
       ctx.stroke();
@@ -299,7 +334,11 @@ class Board extends React.Component{
   render(){
     return(
       <div className="canvas">
-        <canvas id="canvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)} onContextMenu={(e) => this.handleRightClick(e,this.state.tool.name, this.state.tool.src)} ></canvas>
+        <div className="plasticFilm">
+          <p className="one">&#10122;</p>
+          <p className="two">&#10123;</p>
+        </div>
+        <canvas id="canvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)} onContextMenu={(e) => this.handleRightClick(e,this.state.tool.name, this.state.tool.src)} onMouseMove={(e) => this.handleMouseMove(e)} ></canvas>
         <div className="tools">
           <img className="jersey 1" src={shirtBlack1} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 2" src={shirtBlack2} onClick={(e) => this.changeTool("icon", e.target)}></img>

@@ -163,6 +163,26 @@ button.EraseCanvas:hover{
   display: none;
 }
 
+div.plasticFilm{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+div.plasticFilm > p{
+  margin: 0;
+  font-size: 2em;
+  /*display: none;*/
+  position: absolute;
+  top: 0;
+  left:0;
+  height: 0px;
+  width: 0px;
+}
+div.plasticFilm > p:hover{
+  cursor: cell;
+}
+
 /*-----  <TeamPicker /> ------*/
 
 form.TeamPicker{
