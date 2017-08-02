@@ -172,7 +172,7 @@ div.plasticFilm{
 div.plasticFilm > p{
   margin: 0;
   font-size: 2em;
-  /*display: none;*/
+  display: none;
   position: absolute;
   top: 0;
   left:0;
