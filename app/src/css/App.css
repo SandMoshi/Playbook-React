@@ -289,6 +289,7 @@ form.save2list input.desc{
   padding: 0;
   border-radius: 4px;
   overflow: hidden;
+  position: relative;
 }
 
 .plays li{
@@ -299,10 +300,22 @@ form.save2list input.desc{
   padding: 4px;
   display: flex;
   align-items: center;
+  transition: all 0.5s;
 }
+
+.playsTransition-enter{
+  transform: translateX(-100%);
+  z-index: 0;
+}
+.playsTransition-leave{
+  transform: translateX(100%);
+  z-index: 0;
+}
+
 
 .plays li:first-child{
   border-radius: 4px 4px 0px 0px;
+  z-index: 100;
 }
 .plays li:last-child{
   border-radius: 0px 0px 4px 4px;
@@ -378,6 +391,34 @@ ul div.noCurrentPlay{
   height: 100%;
   transition: transform 1s;
 }
+
+li.spinner{
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  background: none;
+  text-align: center;
+  transform: rotate(0deg);
+  font-size: 70px;
+  margin: 0px;
+  padding: 0;
+  width: 66px;
+  height: 60px;
+  min-width: 0px;
+  min-width: 0px;
+  transition: all 0.5s;
+}
+
+ul.plays li.spinner:hover{
+  cursor: auto;
+  background: none;
+  color: black;
+}
+
+ul.plays li.spinner.loading{
+  transform: rotate(360deg);
+}
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
