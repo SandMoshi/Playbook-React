@@ -32,6 +32,7 @@ class Board extends React.Component{
     this.toggleDrawing = this.toggleDrawing.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.drawTempLine = this.drawTempLine.bind(this);
+    this.iconPreview = this.iconPreview.bind(this);
     //create empty objects in the state
     this.state = {
       tool:{},
@@ -61,6 +62,12 @@ class Board extends React.Component{
     const newtoolstate = {name:tool, src: srcStr};
     //update the state
     this.setState({tool:newtoolstate});
+    if(tool === "icon"){
+      this.toggleDrawing(true);
+    }
+    if(tool === "line"){
+      this.toggleDrawing(false);
+    }
   }
 
   setActive(src){
@@ -136,10 +143,33 @@ class Board extends React.Component{
     ctx2.stroke();
   }
 
+  iconPreview(e, src){
+    console.log("Icon preview is being drawn");
+    const tempcanvas = document.querySelector("#tempcanvas");
+    const ctx2 = tempcanvas.getContext('2d');
+    var rect = tempcanvas.getBoundingClientRect();
+    const cWidth = tempcanvas.width;
+    const cHeight = tempcanvas.height;
+
+    // src = document.getElementsByClassName(src)[0];
+    const w = (64/802*cWidth*1.3); //width of image
+    const h = (64/602*cHeight*1.3); //height of image
+    var manualOffset = 40/800 * cWidth;
+    var x = (e.clientX - rect.left - manualOffset);
+    var y = (e.clientY - rect.top - manualOffset);
+    console.log("x: " + x + " y: " + y);
+    this.eraseTempCanvas();
+    ctx2.globalAlpha = 0.75;
+    ctx2.drawImage(src,x,y,w,h);
+  }
+
   handleMouseMove(e) {
     // console.log(e);
     var isDrawing = this.toggleDrawing();
-    if(isDrawing){
+    const tool = this.state.tool.name;
+    var src = this.state.tool.src;
+    src = document.getElementsByClassName(src)[0];
+    if(isDrawing && tool != "icon"){
       //move (2) to wherever mouse is
       const pTwo = document.querySelector("p.two");
       const canvas = document.querySelector("canvas#canvas");
@@ -150,10 +180,12 @@ class Board extends React.Component{
       pTwo.style.left = x + 15 +  "px";
       pTwo.style.top = y - 45 + "px";
       //Check if line is being drawn
-      const tool = this.state.tool.name;
-      var src = this.state.tool.src;
-      src = document.getElementsByClassName(src)[0];
-      if(tool === "line"){
+    }
+    if(isDrawing){
+      if (tool === "icon"){
+        this.iconPreview(e, src);
+      }
+      else if(tool === "line"){
         this.drawTempLine(e, src);
       }
     }
