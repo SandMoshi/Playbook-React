@@ -19,7 +19,7 @@ import arrowRed from '../img/arrow1.png';
 import lineRed from '../img/line1.png';
 import lineSegRed from '../img/line-seg2.png';
 
-import '../css/board.css';
+// import '../css/board.css';
 import { initializeCanvas } from '../js/canvas.js';
 //import { draw } from '../js/canvas.js';
 //import { save2canvas } from '../js/canvas.js';
@@ -31,6 +31,7 @@ class Board extends React.Component{
     this.changeTool = this.changeTool.bind(this);
     this.toggleDrawing = this.toggleDrawing.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.drawTempLine = this.drawTempLine.bind(this);
     //create empty objects in the state
     this.state = {
       tool:{},
@@ -96,6 +97,45 @@ class Board extends React.Component{
     }
   }
 
+  eraseTempCanvas(){
+    const tempcanvas = document.querySelector("canvas#tempcanvas");
+    const ctx2 = tempcanvas.getContext('2d');
+    ctx2.clearRect(0, 0, tempcanvas.width, tempcanvas.height);
+  }
+
+  drawTempLine(e, src){
+    console.log("temp line is being drawn");
+    const tempcanvas = document.querySelector("#tempcanvas");
+    const ctx2 = tempcanvas.getContext('2d');
+    var rect = tempcanvas.getBoundingClientRect();
+    var xnew = e.clientX - rect.left;
+    var ynew = e.clientY - rect.top;
+    console.log(xnew +" , " + ynew);
+    //check to see if segmented lineWidth
+    if(src.classList.contains('seg')){
+      var xArr = this.state.tempxy.xArr;
+      var yArr = this.state.tempxy.yArr;
+      var x0 = xArr[xArr.length - 1]*tempcanvas.width;
+      var y0 = yArr[yArr.length - 1]*tempcanvas.height;
+      console.log("xArr = " + x0);
+    }
+    else{
+      var x0 = this.state.tempxy.x;
+      var y0 = this.state.tempxy.y;
+    }
+    console.log(x0 +"," +y0);
+    this.eraseTempCanvas();
+    ctx2.beginPath();
+    ctx2.moveTo(x0,y0);
+    ctx2.lineTo(xnew,ynew);
+    console.log(src);
+    var color = src.getAttribute("color");
+    var endStyle = src.getAttribute("linecap");
+    ctx2.lineWidth = 6;
+    ctx2.closePath();
+    ctx2.stroke();
+  }
+
   handleMouseMove(e) {
     // console.log(e);
     var isDrawing = this.toggleDrawing();
@@ -109,9 +149,15 @@ class Board extends React.Component{
       pTwo.style.display= "block";
       pTwo.style.left = x + 15 +  "px";
       pTwo.style.top = y - 45 + "px";
+      //Check if line is being drawn
+      const tool = this.state.tool.name;
+      var src = this.state.tool.src;
+      src = document.getElementsByClassName(src)[0];
+      if(tool === "line"){
+        this.drawTempLine(e, src);
+      }
     }
   }
-
 
   handleKeyDown(e){
     //listen for escape
@@ -134,6 +180,8 @@ class Board extends React.Component{
         const canvas = document.querySelector("canvas#canvas");
         const ctx = canvas.getContext('2d');
         ctx.closePath();
+        //clear tempcanvas
+        this.eraseTempCanvas();
         this.toggleDrawing(false);
         const rightClickmsg = document.getElementById("rightClickmsg");
         rightClickmsg.classList.add("hidden");
@@ -196,7 +244,7 @@ class Board extends React.Component{
       src = document.getElementsByClassName(src)[0];
       // console.log(src);
       var color = src.getAttribute("color");
-      var endStyle = src.getAttribute("cap");
+      var endStyle = src.getAttribute("linecap");
 
       //Check if we have already started drawing a line
       if (isDrawing === false || isDrawing == null ){
@@ -258,6 +306,8 @@ class Board extends React.Component{
           ctx.closePath();
           ctx.stroke();
           this.toggleDrawing(false);
+          //clear tempcanvas
+          this.eraseTempCanvas();
           var x2 = xnew;
           var y2 = ynew;
           var x200 = x2/cWidth;
@@ -302,7 +352,7 @@ class Board extends React.Component{
     else if (tool === "line"){
       console.log("Chose to redraw a line;" + src);
       var color = src.getAttribute("color");
-      var endStyle = src.getAttribute("cap");
+      var endStyle = src.getAttribute("linecap");
       ctx.beginPath();
       //check if line is segmented
       if(src.classList.contains('seg')){
@@ -338,7 +388,8 @@ class Board extends React.Component{
           <p className="one">&#10122;</p>
           <p className="two">&#10123;</p>
         </div>
-        <canvas id="canvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)} onContextMenu={(e) => this.handleRightClick(e,this.state.tool.name, this.state.tool.src)} onMouseMove={(e) => this.handleMouseMove(e)} ></canvas>
+        <canvas id="tempcanvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)} onContextMenu={(e) => this.handleRightClick(e,this.state.tool.name, this.state.tool.src)} onMouseMove={(e) => this.handleMouseMove(e)} ></canvas>
+        <canvas id="canvas"></canvas>
         <div className="tools">
           <img className="jersey 1" src={shirtBlack1} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 2" src={shirtBlack2} onClick={(e) => this.changeTool("icon", e.target)}></img>
@@ -355,9 +406,9 @@ class Board extends React.Component{
           <img className="jersey 13" src={shirtBlack13} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 14" src={shirtBlack14} onClick={(e) => this.changeTool("icon", e.target)}></img>
           <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="line 1" src={lineRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
+          <img className="line 1" src={lineRed} color="#e20909" onClick={(e) => this.changeTool("line", e.target)}></img>
           {/* <img className="line arrow 1" src={arrowRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img> */}
-          <img className="line seg 1" src={lineSegRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img>
+          <img className="line seg 1" src={lineSegRed} color="#e20909" onClick={(e) => this.changeTool("line", e.target)}></img>
         </div>
         <button className="EraseCanvas" onClick={() => this.props.eraseBoard()}>Erase Play</button>
         <p className="helper hidden" id="rightClickmsg">Right Click to Stop</p>

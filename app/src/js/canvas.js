@@ -1,8 +1,14 @@
 export function initializeCanvas(){
-  const canvas = document.querySelector("canvas#canvas");
+  const canvas = document.querySelector("#canvas");
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   const ctx = canvas.getContext('2d');
+
+  const tempcanvas = document.querySelector("#tempcanvas");
+  tempcanvas.width = tempcanvas.offsetWidth;
+  tempcanvas.height = tempcanvas.offsetHeight;
+  const ctx2 = tempcanvas.getContext('2d');
+
 
   ctx.strokeStyle = "grey";
   ctx.lineJoin = 'round';

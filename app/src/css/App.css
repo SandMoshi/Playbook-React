@@ -99,10 +99,6 @@ div.canvas{
 }
 
 canvas {
-  border: solid 1px black;
-  background: url("../img/rugby-field-bottom.png");
-  background-size: 100% 100%;
-  background-position-y: bottom;
   flex: 2 1 50%;
   width: 100%;
   height: calc((100vw - 40px) * (600/800));
@@ -111,6 +107,19 @@ canvas {
 
 canvas:hover{
   cursor: cell;
+}
+
+#canvas{
+  border: solid 1px black;
+  background: url("../img/rugby-field-bottom.png");
+  background-size: 100% 100%;
+  background-position-y: bottom;
+}
+
+#tempcanvas{
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 div.tools{
@@ -307,6 +316,7 @@ form.save2list input.desc{
   transform: translateX(-100%);
   z-index: 0;
 }
+
 .playsTransition-leave{
   transform: translateX(100%);
   z-index: 0;
