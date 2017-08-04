@@ -20,7 +20,7 @@ class Plays extends React.Component{
           <li className="currentPlay name"><span>Name:  </span>{this.props.currentPlay.name}</li>
           <li className="currentPlay desc"><span>Description:  </span>{this.props.currentPlay.desc}</li>
         </ul>
-        <CSSTransitionGroup className="plays" component="ul" transitionName="playsTransition" transitionEnterTimeout={10} transitionLeaveTimeout={10} >
+        <CSSTransitionGroup className="plays" component="ul" transitionName="playsTransition" transitionEnterTimeout={10} transitionLeaveTimeout={800} >
           {/* <ul className="plays"> */}
           <li className="subtitle">Saved Plays</li>
           {
