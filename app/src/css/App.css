@@ -18,16 +18,66 @@
   font-size: large;
 }
 
+.loadingtext{
+  position: absolute;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+  color: grey;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .pagetitle{
   text-align: center;
   flex: 1 0 100%;
+  margin-bottom: 10px;
 }
 
+.header{
+  flex: 1 0 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
 .main{
   /*  The main div inside of <App />        */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+
+div.logout{
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  max-height: 22px;
+  align-items: center;
+  justify-content: center;
+}
+
+div.logout p{
+  display: inline;
+  font-family: "Roboto", sans-serif;
+  line-height: 22px;
+}
+
+button.logout{
+  display: inline;
+  background-color: #d32f2f;
+  max-width: 400px;
+  margin-left: 10px;
+  margin-top: -2px;
+  box-shadow: none;
+  font-size: 12px;
+  padding: 0px 6px;
+}
+
+button.logout:hover{
+  color: darkred;
+  box-shadow: none;
 }
 
 div.left-side{
@@ -84,6 +134,34 @@ button:hover{
   transition: transform 1s;
   transform: translateY(120%);
 }
+  /*CSS Loading Spinner*/
+  .loading:after {
+      	border-width: 0 3px 0 0;
+      	border-style: solid;
+      	border-color: rgba(0, 0, 0, .5);
+      	border-radius: 50%;
+      	display: block;
+      	height: 50px;
+      	left: 50%;
+      	margin: -25px 0 0 -25px;
+      	position: absolute;
+      	top: 50%;
+      	width: 50px;
+
+      	content: "";
+
+      	animation: spin 1s infinite linear;
+      	-webkit-animation: spin 1s infinite linear;
+      }
+      @keyframes spin {
+      	from { transform: rotate(0deg); }
+      	to { transform: rotate(360deg); }
+      }
+      @-webkit-keyframes spin {
+      	from { -webkit-transform: rotate(0deg); }
+      	to { -webkit-transform: rotate(360deg); }
+      }
+    /*End of Spiner CSS*/
 
 /* ----- <Board />  -----*/
 div.canvas{
@@ -393,7 +471,7 @@ ul.CurrentPlay li {
 ul div.noCurrentPlay{
   background-color: #d32f2f;
   color:white;
-  padding: 12px 12px;
+  padding: 12px 0px;
   text-align: center;
   line-height: 1.5em;
   position: absolute;
@@ -429,6 +507,63 @@ ul.plays li.spinner.loading{
   transform: rotate(360deg);
 }
 
+/* -----   Log In Prompt ------- */
+nav.login{
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 80vh;
+}
+
+nav.login div{
+  max-height: 400px;
+  background: #E8F5E9;
+  border-radius: 10px;
+  border: #A5D6A7 solid 1px;
+  padding: 12px 20px 40px 20px;
+}
+
+nav.login h2{
+  color: #e53935;
+  margin: 6px auto;
+}
+
+nav.login h3{
+  margin: 5px auto 20px auto;
+  color: #FFA000;
+}
+nav.login h3.lock{
+  margin-bottom: 0px;
+}
+
+nav.login h3 span {
+  font-size: 72px;
+  margin: 0px;
+}
+
+nav.login p{
+  font-size: 18px;
+  line-height: 1.5em;
+  margin: 0;
+}
+nav.login button{
+  margin-top: 20px;
+  background: #3B5998;
+}
+
+nav.login button:hover{
+  color: #1A237E;
+  color: black;
+  box-shadow: none;
+}
+
+/*--------*/
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
@@ -438,23 +573,33 @@ ul.plays li.spinner.loading{
 
 /* RESPONSIVE STYLING -- TABLETS */
 @media (max-width: 1181px){
+  div.main{
+    flex-direction: column;
+  }
+
   div.right-side{
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
   div.right-side div{
     display: flex;
     flex-direction: column;
+    min-width: 300px;
+    width: 100%;
+    align-items: center;
   }
   button.loadPlays{
     order:2;
-    max-width: 400px;
+    min-width: 160px;
   }
   ul.plays{
     order:4;
+    width: 100%;
   }
   ul.CurrentPlay{
     order:1;
+    width: 100%;
   }
   form.save2list{
     order: 2; /* really means fourth */
@@ -467,5 +612,7 @@ ul.plays li.spinner.loading{
   button.deleteAllPlays{
     order: 3;
     margin-top: 8px;
+    max-width: 400px;
+    min-width: 160px;
   }
 }

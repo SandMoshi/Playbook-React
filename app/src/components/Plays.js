@@ -24,9 +24,9 @@ class Plays extends React.Component{
           {/* <ul className="plays"> */}
           <li className="subtitle">Saved Plays</li>
           {
-              Object
+            Object
             .keys(this.props.plays)
-            .map(key => <li key={key} onClick={() => this.props.drawPlay(key)}>{this.props.plays[key].name}</li>)
+            .map((key) => <li key={key} onClick={() => this.props.drawPlay(key)}>{this.props.plays[key].name}</li>)
           }
           {/* <li className="spinner">&#9202;</li> */}
 

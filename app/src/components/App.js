@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {withRouter} from "react-router-dom";
 import '../css/App.css';
 import Board from "./Board";
 import Plays from "./Plays";
@@ -22,26 +23,41 @@ class App extends React.Component {
     this.deleteAllPlays = this.deleteAllPlays.bind(this);
     this.renderLogin = this.renderLogin.bind(this);
     this.authenticate = this.authenticate.bind(this);
-    this.AuthHandler = this.AuthHandler.bind(this);
+    this.authHandler = this.authHandler.bind(this);
+    this.logout = this.logout.bind(this);
 
     this.state = {
       plays: {},
       drawing:{},
       currentPlay:{},
-      userid: null,
-      username: null,
-      owner: null,
+      syncedState:{
+        plays: {},
+        userid: null,
+        username: null,
+        owner: null,
+      },
     };
   }
 
   componentWillMount(){
+    console.log("Starting Firebase sync");
+    this.setState({loading:true});
     this.ref = base.syncState(`${this.props.match.params.playbookName}`,
       {
         context: this,
-        state: 'plays',
+        state: 'syncedState',
+        then() {
+          console.log("Firebase is synced.");
+          this.setState({
+            loading: false,
+          })
+        },
       }
     )
   }
+
+  // componentDidMount(){
+  // }
 
   componentWillUnmount(){
     base.removeBinding(this.ref); //refers to the base.syncState above
@@ -84,7 +100,9 @@ class App extends React.Component {
     console.log(playName);
     event.preventDefault(); //prevent browser refresh
     const drawState = {...this.state.drawing};
-    const plays = {...this.state.plays};
+    const syncedState = {...this.state.syncedState};
+    // const plays = {...this.state.syncedState.plays};
+    const plays = syncedState.plays || {};
     plays[playName] = {};
     plays[playName].name = playName;
     plays[playName].desc = desc;
@@ -96,10 +114,12 @@ class App extends React.Component {
       plays[playName].items[key]  = drawState[key];
     });
     console.log(plays);
+    syncedState["plays"] = plays;
+    console.log(syncedState);
     //empty drawing state
     this.setState({drawing: {}});
     //save play to state
-    this.setState({plays: plays});
+    this.setState({syncedState: syncedState});
   }
 
   drawPlay(key){
@@ -163,29 +183,15 @@ class App extends React.Component {
     }
   }
 
-  renderLogin(){
-    return(
-      <nav className="login">
-        <h1>Online Rugby Playbook</h1>
-        <h3>Sign in to view/edit this playbook</h3>
-        <p>This playbook url has been claimed by another user already.</p>
-        <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
-        <button className="facebook login" onClick={()=> this.authenticate('facebook')}>Login with Facebook</button>
-      </nav>
-    )
-  }
-
   authenticate(service){
     if (service === "facebook"){
       var provider = new firebase.auth.FacebookAuthProvider();
     }
     console.log(`Trying to login using ${service}`);
-    firebase.auth().signInWithPopup(provider).then((result) => this.AuthHandler(result));
-    // firebase.auth().signInWithPopup(provider).then(this.AuthHandler(result));
-    // base.AuthWithOAuthPopup(service,this.AuthHandler);
+    firebase.auth().signInWithPopup(provider).then((result) => this.authHandler(result));
   }
 
-  AuthHandler(authData){
+  authHandler(authData){
     console.log(authData); //show the login info
     var username = authData.user.displayName;
     var userid = authData.user.uid;
@@ -196,68 +202,121 @@ class App extends React.Component {
       return;
     }
     //if successful, store the playbook name and user in firebase
-    // var playbookname = this.props.match.params.playbookName;
     var data = {};
     const playbookRef = firebase.database().ref(this.props.match.params.playbookName);
     //query the firebase database for the store data onContextMenu
     playbookRef.once('value').then((snapshot) => {
-      var snap = snapshot.val();
+      var snap = snapshot.val() || {};
       var key = snapshot.key;
       const data = snap.key || {}; //get the snapshot of the database or get empty object
       console.log(data);
+      var syncedState = {...this.state.syncedState};
       // if no owner exists, claim it as this user's store
       if(!data.owner){
-        playbookRef.set({
-          owner: userid,
-        })
+        syncedState.owner = userid; //save the new owner to state
+        syncedState.plays = {hi:"hi"}; //initialize plays into the empty state
+        this.setState({
+          syncedState:syncedState, //update the state
+        });
       }
-      //now save the information about the new owner to state
+      // now save the login information about the user to state
+      syncedState.userid = userid;
+      syncedState.username = username;
       this.setState({
-        userid: userid,
-        username: username,
-        owner: data.owner || userid,
+        syncedState:syncedState,
       })
     })
   }
 
+  renderLogin(){
+    return(
+        <nav className="login">
+          <div>
+            <h1>Online Rugby Playbook</h1>
+            <h3>This playbook has been locked</h3>
+            <h3 className="lock"><span>🔒</span></h3>
+            <h2>Sign in to view or edit this playbook</h2>
+            <p>This playbook url has been claimed by another user already.</p>
+            <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
+            <button className="facebook login" onClick={()=> this.authenticate('facebook')}>Login with Facebook</button>
+            <button className="back2home" onClick={() => this.props.history.push('/')}>Home</button>
+          </div>
+        </nav>
+    )
+  }
+
+  logout(){
+    //tell firebase to logout
+    firebase.auth().signOut().then(() => {
+      //if successful
+      console.log("Signed out of Firebase");
+      //remove the userid from state since the user is no longer loggedin
+      var syncedState = {...this.state.syncedState}; //copy the current state
+      syncedState.userid = null;
+      syncedState.username = null;
+      this.setState({
+        syncedState:syncedState,
+      })
+    },
+    function(error){
+      //unable to logout
+      console.log("Unable to logout");
+    })
+  }
 
   render(){
     // This code if for authenticating the user
-    const logout = <button>Log Out</button>  //saving it for later
+    const logout =
+          <div className="logout">
+            <p className="greeting">Hi, {this.state.syncedState.username}!</p>
+            <button className="logout" onClick={() => this.logout()}>Log Out</button>
+          </div>  //saving it for later
     //if no one is logged in then display the login screen
-    if(!this.state.userid){
-      return(
-        <div>{this.renderLogin()}</div> //show the login screen
-      )
-    }
-    //See if the logged in user is the owner
-    if(this.state.userid != this.state.owner){
-      return(
-        <div>
-          <h2 className="error">Sorry you do not have permission to view this playbook.</h2>
-          <h3>If you're trying to create your own playbook, please choose a new name for it.</h3>
-          <h3>Or you may have to logout then log back in with another account</h3>
-          {logout} //show the logout button
-        </div>
-      )
-    }
-
-    //----end of authentication
-
+    console.log(this.state.syncedState.userid);
+    if(this.state.loading === false){
+      if(!this.state.syncedState.userid){
+        console.log("no userid present");
+        return <div>{this.renderLogin()}</div> //show the login screen
+      }
+      //See if the logged in user is the owner
+      else if(this.state.syncedState.userid !== this.state.syncedState.owner){
+        alert("wrong login!");
+        return(
+          <div className="signinprompt">
+            <h2 className="error">Sorry you do not have permission to view this playbook.</h2>
+            <h3>If you're trying to create your own playbook, please choose a new name for it.</h3>
+            <h3>Or you may have to logout then log back in with another account</h3>
+            {logout} //show the logout button
+          </div>
+        )
+      }
+      //----end of authentication
+      else{
+        return(
+          <div className="main">
+            <div className="header">
+              <h1 className="pagetitle">Online Rubgy Playbook</h1>
+              {logout}
+            </div>
+            <div className="left-side">
+              <Board save2canvas={this.save2canvas} ref="board" emptyDrawingState={this.emptyDrawingState} eraseBoard={this.eraseBoard}/>
+            </div>
+            <div className="right-side">
+              <SavePlay save2list={this.save2list} />
+              <Plays loadPlays={this.loadPlays} plays={this.state.syncedState.plays} currentPlay={this.state.currentPlay} drawPlay={this.drawPlay} deleteAllPlays={this.deleteAllPlays} />
+            </div>
+          </div>
+        )
+      }
+  }else{
     return(
-      <div className="main">
-        <h1 className="pagetitle">Online Rubgy Playbook</h1>
-        {logout}
-        <div className="left-side">
-          <Board save2canvas={this.save2canvas} ref="board" emptyDrawingState={this.emptyDrawingState} eraseBoard={this.eraseBoard}/>
-        </div>
-        <div className="right-side">
-          <SavePlay save2list={this.save2list} />
-          <Plays loadPlays={this.loadPlays} plays={this.state.plays} currentPlay={this.state.currentPlay} drawPlay={this.drawPlay} deleteAllPlays={this.deleteAllPlays} />
-        </div>
+      <div>
+        <p className="loadingtext">Loading...</p>
+        <div className="loading"></div>
       </div>
-    )
-  };
+      )
+  }
+  }
 }
 
-export default App
+export default withRouter(App);
