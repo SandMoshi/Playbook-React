@@ -6,6 +6,9 @@ import SavePlay from "./SavePlay";
 import samplePlays from '../sample-plays';
 
 import base from '../base';
+import firebase from 'firebase/app';
+import database from 'firebase/database';
+import 'firebase/auth'; //pulling in the auth service here
 
 class App extends React.Component {
   constructor() {
@@ -17,11 +20,17 @@ class App extends React.Component {
     this.emptyDrawingState = this.emptyDrawingState.bind(this);
     this.eraseBoard = this.eraseBoard.bind(this);
     this.deleteAllPlays = this.deleteAllPlays.bind(this);
+    this.renderLogin = this.renderLogin.bind(this);
+    this.authenticate = this.authenticate.bind(this);
+    this.AuthHandler = this.AuthHandler.bind(this);
 
     this.state = {
       plays: {},
       drawing:{},
       currentPlay:{},
+      userid: null,
+      username: null,
+      owner: null,
     };
   }
 
@@ -154,10 +163,91 @@ class App extends React.Component {
     }
   }
 
+  renderLogin(){
+    return(
+      <nav className="login">
+        <h1>Online Rugby Playbook</h1>
+        <h3>Sign in to view/edit this playbook</h3>
+        <p>This playbook url has been claimed by another user already.</p>
+        <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
+        <button className="facebook login" onClick={()=> this.authenticate('facebook')}>Login with Facebook</button>
+      </nav>
+    )
+  }
+
+  authenticate(service){
+    if (service === "facebook"){
+      var provider = new firebase.auth.FacebookAuthProvider();
+    }
+    console.log(`Trying to login using ${service}`);
+    firebase.auth().signInWithPopup(provider).then((result) => this.AuthHandler(result));
+    // firebase.auth().signInWithPopup(provider).then(this.AuthHandler(result));
+    // base.AuthWithOAuthPopup(service,this.AuthHandler);
+  }
+
+  AuthHandler(authData){
+    console.log(authData); //show the login info
+    var username = authData.user.displayName;
+    var userid = authData.user.uid;
+    console.log(userid);
+    //on error show it and return nothing
+    if(!userid){
+      console.alert("Error! Unable to login. Error Code:pbFappjsL194");
+      return;
+    }
+    //if successful, store the playbook name and user in firebase
+    // var playbookname = this.props.match.params.playbookName;
+    var data = {};
+    const playbookRef = firebase.database().ref(this.props.match.params.playbookName);
+    //query the firebase database for the store data onContextMenu
+    playbookRef.once('value').then((snapshot) => {
+      var snap = snapshot.val();
+      var key = snapshot.key;
+      const data = snap.key || {}; //get the snapshot of the database or get empty object
+      console.log(data);
+      // if no owner exists, claim it as this user's store
+      if(!data.owner){
+        playbookRef.set({
+          owner: userid,
+        })
+      }
+      //now save the information about the new owner to state
+      this.setState({
+        userid: userid,
+        username: username,
+        owner: data.owner || userid,
+      })
+    })
+  }
+
+
   render(){
+    // This code if for authenticating the user
+    const logout = <button>Log Out</button>  //saving it for later
+    //if no one is logged in then display the login screen
+    if(!this.state.userid){
+      return(
+        <div>{this.renderLogin()}</div> //show the login screen
+      )
+    }
+    //See if the logged in user is the owner
+    if(this.state.userid != this.state.owner){
+      return(
+        <div>
+          <h2 className="error">Sorry you do not have permission to view this playbook.</h2>
+          <h3>If you're trying to create your own playbook, please choose a new name for it.</h3>
+          <h3>Or you may have to logout then log back in with another account</h3>
+          {logout} //show the logout button
+        </div>
+      )
+    }
+
+    //----end of authentication
+
     return(
       <div className="main">
         <h1 className="pagetitle">Online Rubgy Playbook</h1>
+        {logout}
         <div className="left-side">
           <Board save2canvas={this.save2canvas} ref="board" emptyDrawingState={this.emptyDrawingState} eraseBoard={this.eraseBoard}/>
         </div>

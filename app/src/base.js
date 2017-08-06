@@ -1,6 +1,7 @@
 import Rebase from 're-base';
 import firebase from 'firebase/app';
 import database from 'firebase/database';
+import 'firebase/auth'; //pulling in the auth service here
 
 const config={
   apiKey: "AIzaSyCohlhFhT9pWNd6vv7PSQH7TtCfqOMoffs",
