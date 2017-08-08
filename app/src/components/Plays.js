@@ -9,6 +9,7 @@ class Plays extends React.Component{
     super();
   }
 
+
   render(){
     return(
       <div>
@@ -21,23 +22,19 @@ class Plays extends React.Component{
           <li className="currentPlay desc"><span>Description:  </span>{this.props.currentPlay.desc}</li>
         </ul>
         <CSSTransitionGroup className="plays" component="ul" transitionName="playsTransition" transitionEnterTimeout={10} transitionLeaveTimeout={800} >
-          {/* <ul className="plays"> */}
           <li className="subtitle">Saved Plays</li>
           {
-            Object
+            this.props.plays &&
+              Object
             .keys(this.props.plays)
-            .map((key) => <li key={key} onClick={() => this.props.drawPlay(key)}>{this.props.plays[key].name}</li>)
+            .map(key => <li key={key} onClick={() => this.props.drawPlay(key)}>{this.props.plays[key].name}</li>)
           }
-          {/* <li className="spinner">&#9202;</li> */}
-
-
-          {/* </ul> */}
         </CSSTransitionGroup>
         <button onClick={this.props.loadPlays} className="loadPlays">Load Sample Plays</button>
         <button onClick={this.props.deleteAllPlays} className="deleteAllPlays erase">Delete Plays</button>
       </div>
     )
-}
+  }
 }
 
 export default Plays;

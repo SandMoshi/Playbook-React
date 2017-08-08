@@ -27,6 +27,7 @@ class App extends React.Component {
     this.logout = this.logout.bind(this);
 
     this.state = {
+      loading:false,
       plays: {},
       drawing:{},
       currentPlay:{},
@@ -64,8 +65,10 @@ class App extends React.Component {
   }
 
   loadPlays(){
+    var syncedState = {...this.state.syncedState};
+    syncedState.plays = samplePlays; //add plays
     this.setState({
-      plays: samplePlays
+      syncedState:syncedState,
     });
   }
 
@@ -128,26 +131,28 @@ class App extends React.Component {
     const noCurrentPlay = document.getElementsByClassName("noCurrentPlay")[0];
     noCurrentPlay.classList.add("slideDown");
     console.log(key);
-    const play = {...this.state.plays[key]};
-    const items = play.items;
+    const play = {...this.state.syncedState.plays[key]};
+    const items = play.items || null;
     //console.log(play);
     //console.log(items);
-    Object.keys(items).forEach( item => {
-      // console.log(item);
-      var tool = items[item].tool;
-      const src = items[item].src;
-      var x = items[item].x;
-      var y = items[item].y;
-      var w = items[item].w || null;
-      var h = items[item].h || null;
-      var x2 = items[item].x2 || null;
-      var y2 = items[item].y2 || null;
-      var xArr = items[item].xArr || null;
-      var yArr = items[item].yArr || null;
+    if(items !== null){ //make sure that the play isn't empty
+      Object.keys(items).forEach( item => {
+        // console.log(item);
+        var tool = items[item].tool;
+        const src = items[item].src;
+        var x = items[item].x;
+        var y = items[item].y;
+        var w = items[item].w || null;
+        var h = items[item].h || null;
+        var x2 = items[item].x2 || null;
+        var y2 = items[item].y2 || null;
+        var xArr = items[item].xArr || null;
+        var yArr = items[item].yArr || null;
 
-      console.log(src);
-      this.refs.board.redraw(tool,src,x,y,w,h,x2,y2,xArr,yArr);
-    })
+        console.log(src);
+        this.refs.board.redraw(tool,src,x,y,w,h,x2,y2,xArr,yArr);
+      })
+    }
     this.setState({
       currentPlay: {
           name: play.name,
@@ -175,7 +180,11 @@ class App extends React.Component {
   deleteAllPlays(){
     //remove all plays from state
     window.confirm("Are you sure you want to delete all the saved plays? They will be lost forever");
-    this.setState({ plays:null });
+    // var syncedState = {...this.state.syncedState};
+    var tempstate = {...this.state.syncedState};
+    tempstate.plays = null;
+    console.log(tempstate);
+    this.setState({ syncedState: tempstate, });
     //unhide noCurrentPlay red box if there is no currentPlay
     if(Object.keys(this.state.currentPlay).length === 0){
       const noCurrentPlay = document.getElementsByClassName("noCurrentPlay")[0];
@@ -214,7 +223,7 @@ class App extends React.Component {
       // if no owner exists, claim it as this user's store
       if(!data.owner){
         syncedState.owner = userid; //save the new owner to state
-        syncedState.plays = {hi:"hi"}; //initialize plays into the empty state
+        syncedState.plays = {}; //initialize plays into the empty state
         this.setState({
           syncedState:syncedState, //update the state
         });
@@ -233,10 +242,11 @@ class App extends React.Component {
         <nav className="login">
           <div>
             <h1>Online Rugby Playbook</h1>
-            <h3>This playbook has been locked</h3>
+            <h1 className="pathname">{this.props.location.pathname}</h1>
+            <h3>This playbook is locked</h3>
             <h3 className="lock"><span>🔒</span></h3>
             <h2>Sign in to view or edit this playbook</h2>
-            <p>This playbook url has been claimed by another user already.</p>
+            <p>This playbook will be claimed by the signed in person to access it.</p>
             <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
             <button className="facebook login" onClick={()=> this.authenticate('facebook')}>Login with Facebook</button>
             <button className="back2home" onClick={() => this.props.history.push('/')}>Home</button>
