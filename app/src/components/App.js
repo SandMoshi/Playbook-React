@@ -244,7 +244,7 @@ class App extends React.Component {
             <h1>Online Rugby Playbook</h1>
             <h1 className="pathname">{this.props.location.pathname}</h1>
             <h3>This playbook is locked</h3>
-            <h3 className="lock"><span>🔒</span></h3>
+            <h3 className="lock"><span role="img">🔒</span></h3>
             <h2>Sign in to view or edit this playbook</h2>
             <p>This playbook will be claimed by the signed in person to access it.</p>
             <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
@@ -256,21 +256,27 @@ class App extends React.Component {
   }
 
   logout(){
+    //remove the userid from state since the user is no longer loggedin
+    var syncedState = {...this.state.syncedState}; //copy the current state
+    var oldState = syncedState; //make a second copy
+    syncedState.userid = null;
+    syncedState.username = null;
+    console.log(syncedState);
+    this.setState({
+      syncedState: syncedState,
+    })
     //tell firebase to logout
     firebase.auth().signOut().then(() => {
       //if successful
       console.log("Signed out of Firebase");
-      //remove the userid from state since the user is no longer loggedin
-      var syncedState = {...this.state.syncedState}; //copy the current state
-      syncedState.userid = null;
-      syncedState.username = null;
-      this.setState({
-        syncedState:syncedState,
-      })
     },
     function(error){
       //unable to logout
       console.log("Unable to logout");
+      //repopulate the userid field
+      this.setState({
+        syncedState: oldState,
+      })
     })
   }
 
@@ -296,7 +302,7 @@ class App extends React.Component {
             <h2 className="error">Sorry you do not have permission to view this playbook.</h2>
             <h3>If you're trying to create your own playbook, please choose a new name for it.</h3>
             <h3>Or you may have to logout then log back in with another account</h3>
-            {logout} //show the logout button
+            {logout} {/* //show the logout button */}
           </div>
         )
       }
