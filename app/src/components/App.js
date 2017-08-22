@@ -207,7 +207,7 @@ class App extends React.Component {
     console.log(userid);
     //on error show it and return nothing
     if(!userid){
-      console.alert("Error! Unable to login. Error Code:pbFappjsL194");
+      console.alert("Error! Unable to login. Error Code:EC00001");
       return;
     }
     //if successful, store the playbook name and user in firebase
@@ -215,25 +215,28 @@ class App extends React.Component {
     const playbookRef = firebase.database().ref(this.props.match.params.playbookName);
     //query the firebase database for the store data onContextMenu
     playbookRef.once('value').then((snapshot) => {
+      //console.log(snapshot);
       var snap = snapshot.val() || {};
+      //console.log(snap);
       var key = snapshot.key;
-      const data = snap.key || {}; //get the snapshot of the database or get empty object
-      console.log(data);
+      const data = snap || {}; //get the snapshot of the database or get empty object
+      //console.log(data);
       var syncedState = {...this.state.syncedState};
-      // if no owner exists, claim it as this user's store
-      if(!data.owner){
-        syncedState.owner = userid; //save the new owner to state
-        syncedState.plays = {}; //initialize plays into the empty state
-        this.setState({
-          syncedState:syncedState, //update the state
-        });
-      }
       // now save the login information about the user to state
       syncedState.userid = userid;
       syncedState.username = username;
       this.setState({
         syncedState:syncedState,
       })
+      // if no owner exists, claim it as this user's store
+      if(!data.owner){
+        console.log("This playbook has no OWNER yet");
+        syncedState.owner = userid; //save the new owner to state
+        syncedState.plays = {}; //initialize plays into the empty state
+        this.setState({
+          syncedState:syncedState, //update the state
+        });
+      }
     })
   }
 
@@ -281,22 +284,19 @@ class App extends React.Component {
   }
 
   render(){
-    // This code if for authenticating the user
+    // This code is for authenticating the user
     const logout =
           <div className="logout">
             <p className="greeting">Hi, {this.state.syncedState.username}!</p>
             <button className="logout" onClick={() => this.logout()}>Log Out</button>
-          </div>  //saving it for later
+          </div>;  //saving it for later
     //if no one is logged in then display the login screen
-    console.log(this.state.syncedState.userid);
+    //console.log(this.state.syncedState.userid);
+    var userid = this.state.syncedState.userid;
     if(this.state.loading === false){
-      if(!this.state.syncedState.userid){
-        console.log("no userid present");
-        return <div>{this.renderLogin()}</div> //show the login screen
-      }
       //See if the logged in user is the owner
-      else if(this.state.syncedState.userid !== this.state.syncedState.owner){
-        alert("wrong login!");
+      if( userid && userid !== this.state.syncedState.owner){
+        console.warn("Wrong login! This user is not the owner of the playbook");
         return(
           <div className="signinprompt">
             <h2 className="error">Sorry you do not have permission to view this playbook.</h2>
@@ -305,6 +305,10 @@ class App extends React.Component {
             {logout} {/* //show the logout button */}
           </div>
         )
+      }
+      else if(!userid){
+        console.log("no userid present");
+        return <div>{this.renderLogin()}</div> //show the login screen
       }
       //----end of authentication
       else{
