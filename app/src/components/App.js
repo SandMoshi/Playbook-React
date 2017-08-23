@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {withRouter} from "react-router-dom";
 import '../css/App.css';
+
+import WrongUser from './WrongUser';
 import Board from "./Board";
 import Plays from "./Plays";
 import SavePlay from "./SavePlay";
@@ -286,10 +288,11 @@ class App extends React.Component {
   render(){
     // This code is for authenticating the user
     const logout =
+          // logout button will be created here but used later
           <div className="logout">
             <p className="greeting">Hi, {this.state.syncedState.username}!</p>
             <button className="logout" onClick={() => this.logout()}>Log Out</button>
-          </div>;  //saving it for later
+          </div>;
     //if no one is logged in then display the login screen
     //console.log(this.state.syncedState.userid);
     var userid = this.state.syncedState.userid;
@@ -297,13 +300,7 @@ class App extends React.Component {
       //See if the logged in user is the owner
       if( userid && userid !== this.state.syncedState.owner){
         console.warn("Wrong login! This user is not the owner of the playbook");
-        return(
-          <div className="signinprompt">
-            <h2 className="error">Sorry you do not have permission to view this playbook.</h2>
-            <h3>If you're trying to create your own playbook, please choose a new name for it.</h3>
-            <h3>Or you may have to logout then log back in with another account</h3>
-            {logout} {/* //show the logout button */}
-          </div>
+        return(<WrongUser username={this.state.syncedState.username} logout={this.logout}/>
         )
       }
       else if(!userid){
