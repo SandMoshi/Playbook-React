@@ -76,13 +76,13 @@ class App extends React.Component {
 
   save2canvas(tool,src,x,y,w,h,x2,y2,xArr,yArr){
     //This function will save what was drawn on the canvas to state
-    console.log("saved to console:");
+        // console.log("saved to console:");
     src.classList.remove("active"); //make sure the source doesn't contain active
     var tempsrc = src.classList.value; //Must convert src to just the classname string for firebase to accept it
-    console.log(src);
+        // console.log(src);
     //get state
     const drawState = {...this.state.drawing};
-    console.log(drawState);
+        // console.log(drawState);
     //change the state
     const drawing = {
       tool: tool,
@@ -102,11 +102,10 @@ class App extends React.Component {
   }
 
   save2list(event, playName, desc){
-    console.log(playName);
+        // console.log(playName);
     event.preventDefault(); //prevent browser refresh
     const drawState = {...this.state.drawing};
     const syncedState = {...this.state.syncedState};
-    // const plays = {...this.state.syncedState.plays};
     const plays = syncedState.plays || {};
     plays[playName] = {};
     plays[playName].name = playName;
@@ -118,9 +117,9 @@ class App extends React.Component {
     Object.keys(drawState).forEach( key => {
       plays[playName].items[key]  = drawState[key];
     });
-    console.log(plays);
+        // console.log(plays);
     syncedState["plays"] = plays;
-    console.log(syncedState);
+        // console.log(syncedState);
     //empty drawing state
     this.setState({drawing: {}});
     //save play to state
@@ -132,16 +131,18 @@ class App extends React.Component {
     //hide noCurrentPlay box
     const noCurrentPlay = document.getElementsByClassName("noCurrentPlay")[0];
     noCurrentPlay.classList.add("slideDown");
-    console.log(key);
+        // console.log(key);
     const play = {...this.state.syncedState.plays[key]};
     const items = play.items || null;
-    //console.log(play);
-    //console.log(items);
+    //save the items in the play to the drawing object in state
+    this.setState({drawing: items});
+        //console.log(play);
+        //console.log(items);
     if(items !== null){ //make sure that the play isn't empty
       Object.keys(items).forEach( item => {
         // console.log(item);
         var tool = items[item].tool;
-        const src = items[item].src;
+        var src = items[item].src;
         var x = items[item].x;
         var y = items[item].y;
         var w = items[item].w || null;
@@ -151,7 +152,7 @@ class App extends React.Component {
         var xArr = items[item].xArr || null;
         var yArr = items[item].yArr || null;
 
-        console.log(src);
+            // console.log(src);
         this.refs.board.redraw(tool,src,x,y,w,h,x2,y2,xArr,yArr);
       })
     }
@@ -185,7 +186,7 @@ class App extends React.Component {
     // var syncedState = {...this.state.syncedState};
     var tempstate = {...this.state.syncedState};
     tempstate.plays = null;
-    console.log(tempstate);
+        // console.log(tempstate);
     this.setState({ syncedState: tempstate, });
     //unhide noCurrentPlay red box if there is no currentPlay
     if(Object.keys(this.state.currentPlay).length === 0){
@@ -198,7 +199,7 @@ class App extends React.Component {
     if (service === "facebook"){
       var provider = new firebase.auth.FacebookAuthProvider();
     }
-    console.log(`Trying to login using ${service}`);
+        // console.log(`Trying to login using ${service}`);
     firebase.auth().signInWithPopup(provider).then((result) => this.authHandler(result));
   }
 
