@@ -3,10 +3,10 @@ import React from 'react';
 import '../css/App.css';
 
 class SavePlay extends React.Component{
-  constructor(){
-    super();
-
-  }
+  // constructor(){
+  //   super();
+  // 
+  // }
 
   render(){
     return(

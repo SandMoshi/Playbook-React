@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class TeamPicker extends React.Component{
 
@@ -30,7 +31,7 @@ class TeamPicker extends React.Component{
 }
 
 TeamPicker.contextTypes = {
-  router: React.PropTypes.object.isRequired
+  router: PropTypes.object.isRequired
 }
 
 export default TeamPicker;

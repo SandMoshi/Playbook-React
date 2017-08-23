@@ -1,13 +1,13 @@
 import React from 'react';
 import {CSSTransitionGroup} from 'react-transition-group';
 
-import spinner from '../img/spinner.png';
+// import spinner from '../img/spinner.png';
 
 class Plays extends React.Component{
 
-  constructor(){
-    super();
-  }
+  // constructor(){
+  //   super();
+  // }
 
 
   render(){

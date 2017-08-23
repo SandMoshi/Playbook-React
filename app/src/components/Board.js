@@ -15,7 +15,7 @@ import shirtBlack12 from '../img/shirt-black-12.png';
 import shirtBlack13 from '../img/shirt-black-13.png';
 import shirtBlack14 from '../img/shirt-black-14.png';
 import shirtBlack15 from '../img/shirt-black-15.png';
-import arrowRed from '../img/arrow1.png';
+// import arrowRed from '../img/arrow1.png';
 import lineRed from '../img/line1.png';
 import lineSegRed from '../img/line-seg2.png';
 
@@ -57,7 +57,7 @@ class Board extends React.Component{
     console.log(srcStr);
     this.setActive(src);
     //duplicate our state
-    const toolstate = {...this.state.tool};
+    // const toolstate = {...this.state.tool};
     //change the tools
     const newtoolstate = {name:tool, src: srcStr};
     //update the state
@@ -423,24 +423,24 @@ class Board extends React.Component{
         <canvas id="tempcanvas"  onClick={(e) => this.draw(e, this.state.tool.name, this.state.tool.src)} onContextMenu={(e) => this.handleRightClick(e,this.state.tool.name, this.state.tool.src)} onMouseMove={(e) => this.handleMouseMove(e)} ></canvas>
         <canvas id="canvas"></canvas>
         <div className="tools">
-          <img className="jersey 1" src={shirtBlack1} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 2" src={shirtBlack2} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 3" src={shirtBlack3} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 4" src={shirtBlack4} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 5" src={shirtBlack5} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 6" src={shirtBlack6} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 7" src={shirtBlack7} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 8" src={shirtBlack8} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 9" src={shirtBlack9} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 10" src={shirtBlack10} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 11" src={shirtBlack11} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 12" src={shirtBlack12} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 13" src={shirtBlack13} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 14" src={shirtBlack14} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="jersey 15" src={shirtBlack15} onClick={(e) => this.changeTool("icon", e.target)}></img>
-          <img className="line 1" src={lineRed} color="#e20909" onClick={(e) => this.changeTool("line", e.target)}></img>
+          <img className="jersey 1" src={shirtBlack1} alt="Position 1 jersey icon"  onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 2" src={shirtBlack2} alt="Position 2 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 3" src={shirtBlack3} alt="Position 3 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 4" src={shirtBlack4} alt="Position 4 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 5" src={shirtBlack5} alt="Position 5 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 6" src={shirtBlack6} alt="Position 6 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 7" src={shirtBlack7} alt="Position 7 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 8" src={shirtBlack8} alt="Position 8 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 9" src={shirtBlack9} alt="Position 9 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 10" src={shirtBlack10} alt="Position 10 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 11" src={shirtBlack11} alt="Position 11 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 12" src={shirtBlack12} alt="Position 12 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 13" src={shirtBlack13} alt="Position 13 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 14" src={shirtBlack14} alt="Position 14 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="jersey 15" src={shirtBlack15} alt="Position 15 jersey icon" onClick={(e) => this.changeTool("icon", e.target)}></img>
+          <img className="line 1" src={lineRed} color="#e20909" alt="Red line tool" onClick={(e) => this.changeTool("line", e.target)}></img>
           {/* <img className="line arrow 1" src={arrowRed} color="#e20909" cap="square" onClick={(e) => this.changeTool("line", e.target)}></img> */}
-          <img className="line seg 1" src={lineSegRed} color="#e20909" onClick={(e) => this.changeTool("line", e.target)}></img>
+          <img className="line seg 1" src={lineSegRed} color="#e20909" alt="Red segmented line tool" onClick={(e) => this.changeTool("line", e.target)}></img>
         </div>
         <button className="EraseCanvas" onClick={() => this.props.eraseBoard()}>Erase Play</button>
         <p className="helper hidden" id="rightClickmsg">Right Click to Stop</p>

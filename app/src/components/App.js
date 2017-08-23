@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {withRouter} from "react-router-dom";
 import '../css/App.css';
 
@@ -10,7 +10,6 @@ import samplePlays from '../sample-plays';
 
 import base from '../base';
 import firebase from 'firebase/app';
-import database from 'firebase/database';
 import 'firebase/auth'; //pulling in the auth service here
 
 class App extends React.Component {
@@ -204,7 +203,7 @@ class App extends React.Component {
   }
 
   authHandler(authData){
-    console.log(authData); //show the login info
+    //console.log(authData); //show the login info
     var username = authData.user.displayName;
     var userid = authData.user.uid;
     console.log(userid);
@@ -214,14 +213,13 @@ class App extends React.Component {
       return;
     }
     //if successful, store the playbook name and user in firebase
-    var data = {};
     const playbookRef = firebase.database().ref(this.props.match.params.playbookName);
     //query the firebase database for the store data onContextMenu
     playbookRef.once('value').then((snapshot) => {
       //console.log(snapshot);
       var snap = snapshot.val() || {};
       //console.log(snap);
-      var key = snapshot.key;
+      // var key = snapshot.key;
       const data = snap || {}; //get the snapshot of the database or get empty object
       //console.log(data);
       var syncedState = {...this.state.syncedState};
@@ -250,7 +248,7 @@ class App extends React.Component {
             <h1>Online Rugby Playbook</h1>
             <h1 className="pathname">{this.props.location.pathname}</h1>
             <h3>This playbook is locked</h3>
-            <h3 className="lock"><span role="img">🔒</span></h3>
+            <h3 className="lock"><span role="img" aria-label="lock emoji">🔒</span></h3>
             <h2>Sign in to view or edit this playbook</h2>
             <p>This playbook will be claimed by the signed in person to access it.</p>
             <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
@@ -267,7 +265,7 @@ class App extends React.Component {
     var oldState = syncedState; //make a second copy
     syncedState.userid = null;
     syncedState.username = null;
-    console.log(syncedState);
+    // console.log(syncedState);
     this.setState({
       syncedState: syncedState,
     })
