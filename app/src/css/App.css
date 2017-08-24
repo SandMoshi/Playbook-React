@@ -44,6 +44,7 @@
 .main{
   /*  The main div inside of <App />        */
   display: flex;
+  display: -webkit-flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
@@ -52,6 +53,7 @@ div.logout{
   width: 100%;
   text-align: center;
   display: flex;
+  display: -webkit-flex;
   flex-direction: row;
   max-height: 22px;
   align-items: center;
@@ -352,6 +354,7 @@ form.save2list input{
 form.save2list div{
   height: 33.3%;
   display: flex;
+  display: -webkit-flex;
   justify-content:flex-end;
   align-items: center;
 }
@@ -385,6 +388,7 @@ form.save2list input.desc{
   background-blend-mode: darken;
   padding: 4px;
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   transition: all 0.5s;
 }
@@ -426,6 +430,7 @@ ul.plays li.subtitle{
   font-family: Roboto, sans-serif;
   background-color: #D7E361;
   display: flex;
+  display: -webkit-flex;
   justify-content: center;
   /*border-bottom: 2px solid black;*/
   box-shadow: 0px 1px 4px black;
@@ -510,6 +515,7 @@ ul.plays li.spinner.loading{
 
 div.signinwrapper{
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -523,6 +529,7 @@ div.signinprompt{
   font-family: "Roboto", sans-serif;
 
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
   justify-content: center;
   /*height: 400px;*/
@@ -568,13 +575,16 @@ nav.login{
   font-family: "Roboto", sans-serif;
 
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
   justify-content: center;
-  height: 80vh;
+  align-items: center;
+  height: 100vh;
 }
 
 nav.login div{
   max-height: 400px;
+  max-width: 700px;
   background: #E8F5E9;
   border-radius: 10px;
   border: #A5D6A7 solid 1px;
@@ -620,14 +630,10 @@ nav.login button.facebook:hover{
   box-shadow: none;
 }
 
-/*--------*/
-
-
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
 
 /* RESPONSIVE STYLING -- TABLETS */
 @media (max-width: 1181px){
@@ -637,11 +643,13 @@ nav.login button.facebook:hover{
 
   div.right-side{
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
     align-items: center;
   }
   div.right-side div{
     display: flex;
+    display: -webkit-flex;
     flex-direction: column;
     min-width: 300px;
     width: 100%;
@@ -674,4 +682,21 @@ nav.login button.facebook:hover{
     max-width: 400px;
     min-width: 160px;
   }
+}
+
+/* RESPONSIVE STYLING -- TABLETS */
+@media (max-width: 600px){
+  nav.login>div{
+    max-height: 480px;
+  }
+  nav.login h3.lock span{
+    font-size: 3em;
+  }
+  nav.login h2{
+    font-size: 1.1em;
+  }
+  nav.login p{
+    font-size: 1.0em;
+  }
+
 }

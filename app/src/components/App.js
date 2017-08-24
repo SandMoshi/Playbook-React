@@ -241,6 +241,23 @@ class App extends React.Component {
     })
   }
 
+  renderNewPlaybook(){
+    return(
+        <nav className="login">
+          <div>
+            <h1>Online Rugby Playbook</h1>
+            <h1 className="pathname">{this.props.location.pathname}</h1>
+            <h3>Welcome! This playbook is available!</h3>
+            <h3 className="lock"><span role="img" aria-label="rugby emoji">🏉</span></h3>
+            <h2>Sign in to claim this playbook</h2>
+            <p>This playbook is available and the first person to access it will automatically claim it!</p>
+            <button className="facebook login" onClick={()=> this.authenticate('facebook')}>Login with Facebook</button>
+            <button className="back2home" onClick={() => this.props.history.push('/')}>Home</button>
+          </div>
+        </nav>
+    )
+  }
+
   renderLogin(){
     return(
         <nav className="login">
@@ -250,7 +267,7 @@ class App extends React.Component {
             <h3>This playbook is locked</h3>
             <h3 className="lock"><span role="img" aria-label="lock emoji">🔒</span></h3>
             <h2>Sign in to view or edit this playbook</h2>
-            <p>This playbook will be claimed by the signed in person to access it.</p>
+            <p>This playbook will be claimed by the first person to access it.</p>
             <p>If this does not belong to you, you will have to choose a new name for your playbook.</p>
             <button className="facebook login" onClick={()=> this.authenticate('facebook')}>Login with Facebook</button>
             <button className="back2home" onClick={() => this.props.history.push('/')}>Home</button>
@@ -295,6 +312,7 @@ class App extends React.Component {
     //if no one is logged in then display the login screen
     //console.log(this.state.syncedState.userid);
     var userid = this.state.syncedState.userid;
+    var owner = this.state.syncedState.owner;
     if(this.state.loading === false){
       //See if the logged in user is the owner
       if( userid && userid !== this.state.syncedState.owner){
@@ -302,7 +320,11 @@ class App extends React.Component {
         return(<WrongUser username={this.state.syncedState.username} logout={this.logout}/>
         )
       }
-      else if(!userid){
+      else if(!owner){
+        console.log("No one has claimed this page yet");
+        return <div>{this.renderNewPlaybook()}</div>
+      }
+      else if(owner && !userid){
         console.log("no userid present");
         return <div>{this.renderLogin()}</div> //show the login screen
       }
